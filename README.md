@@ -6,6 +6,7 @@ Logiciels et configuration pour Serre Connectée.
 Description
 -----------
 ...
+http://frama.link/SerreUSPC
 
 Contacts
 --------
