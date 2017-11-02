@@ -45,4 +45,13 @@ dmesg | grep tty
 
  * Le tour est jouė
 
+Configuration actuelle
+----------------------
+
+ * Avec carte fille Groove
+ * A0/A1 : Module temp/humidity
+ * A4/A5 : Module light
+ * A8/A9 : CO2
+ * A12/A13 : O2
+ * Pas de screen I2C connecté
 
