@@ -18,6 +18,7 @@
 
 #include "DummyActuator.h"
 #include "DigitalActuator.h"
+#include "Buzzer.h"
 
 Service          *pSvc;
 
@@ -31,6 +32,7 @@ DummyActuator     lDummyActuator("DUMMY");
 DigitalActuator   lGreenLed("GREEN",10);
 DigitalActuator   lYellowLed("YELLOW",11);
 DigitalActuator   lRedLed("RED",12);
+Buzzer            lBuzzer("BUZZER",2);
 
 void setup() {
   pSvc = Service::getInstance();
@@ -43,6 +45,7 @@ void setup() {
   pSvc->addActuator(&lGreenLed);
   pSvc->addActuator(&lYellowLed);
   pSvc->addActuator(&lRedLed);
+  pSvc->addActuator(&lBuzzer);
 }
 
 void loop() {
