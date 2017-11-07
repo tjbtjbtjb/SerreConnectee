@@ -47,10 +47,10 @@ void Service::doLoop() {
     m_inputString = "";
     m_stringComplete = false;
   }
-  digitalWrite(LED_BUILTIN,HIGH);
+/*  digitalWrite(LED_BUILTIN,HIGH);
   delay(200);
   digitalWrite(LED_BUILTIN,LOW);
-  delay(200);
+  delay(200);*/
 }
 
 // --- doSerialEvent() : read serial input if any ---------------------------
