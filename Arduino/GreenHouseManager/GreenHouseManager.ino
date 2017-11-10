@@ -12,40 +12,39 @@
   
 #include "Service.h"
 
-#include "DummySensor.h"
+//#include "DummySensor.h"
 #include "VoltageSensor.h"
+#include "LightSensor.h"
 #include "TemperatureSensor.h"
+#include "HumiditySensor.h"
+#include "O2Sensor.h"
 
-#include "DummyActuator.h"
+//#include "DummyActuator.h"
 #include "DigitalActuator.h"
-#include "Buzzer.h"
+//#include "Buzzer.h"
 
 Service          *pSvc;
 
 // Sensors
-DummySensor       lDummySensor("DUMMY");
 VoltageSensor     lVoltageSensor("VOLT",A2);
-TemperatureSensor lTemperatureSensor("TEMP");
+TemperatureSensor lTemperatureSensor("TEMP",A0);
+HumiditySensor    lHumiditySensor("HUMIDITY",&lTemperatureSensor);
+LightSensor       lLightSensor("LIGHT",A4);
+O2Sensor          lO2Sensor("O2RATE",A12);
 
 // Actuators
-DummyActuator     lDummyActuator("DUMMY");
-DigitalActuator   lGreenLed("GREEN",10);
-DigitalActuator   lYellowLed("YELLOW",11);
-DigitalActuator   lRedLed("RED",12);
-Buzzer            lBuzzer("BUZZER",2);
+DigitalActuator   lBuiltinLed("LED",LED_BUILTIN);
 
 void setup() {
   pSvc = Service::getInstance();
   
-  pSvc->addSensor(&lDummySensor);
   pSvc->addSensor(&lVoltageSensor);
+  pSvc->addSensor(&lLightSensor);
   pSvc->addSensor(&lTemperatureSensor);
+  pSvc->addSensor(&lHumiditySensor);
+  pSvc->addSensor(&lO2Sensor);
 
-  pSvc->addActuator(&lDummyActuator);
-  pSvc->addActuator(&lGreenLed);
-  pSvc->addActuator(&lYellowLed);
-  pSvc->addActuator(&lRedLed);
-  pSvc->addActuator(&lBuzzer);
+  pSvc->addActuator(&lBuiltinLed);
 }
 
 void loop() {
