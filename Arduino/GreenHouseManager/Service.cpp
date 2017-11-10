@@ -69,6 +69,28 @@ void Service::doSerialEvent() {
   }
 }
 
+// --- Service::printAll ----------------------------------------------------
+void Service::printAll() {
+  int i;
+  String s="Connected devices : \n";
+  for (i=0;i<m_sensorCnt;i++) {
+    s += "Sensor ";
+    s += i ;
+    s += " (" ;
+    s += getSensor(i)->getID();
+    s += ") : " ;
+    s += getSensor(i)->getValue();
+    s += "\n";
+  }
+  for (i=0;i<m_actuatorCnt;i++) {
+    s += "Actuator " ;
+    s += i ;
+    s += " (";
+    s += getActuator(i)->getID() ;
+    s += ") \n";
+  }
+}
+
 // --- Service::addSensor ---------------------------------------------------
 void Service::addSensor(Sensor *s) {
   if (m_sensorCnt < sm_maxSensorCnt) 
@@ -144,9 +166,10 @@ void Service::analyzeCommand() {
       case 0: // first word analysis
         if      ( ! strncmp(word,"SET",3) ) bSet=true;
         else if ( ! strncmp(word,"GET",3) ) bGet=true;
+	else if ( ! strncmp(word,"ALL",3) ) { printAll(); bContinue=false; }
         else if ( ! strncmp(word,"RESET",3) ) softReset();
         else {
-          Serial.println("UNKN");
+          Serial.println("UNK");
           bContinue=false;
         }
         break;
@@ -159,7 +182,7 @@ void Service::analyzeCommand() {
             break;
           }
           Serial.print("ACK "); 
-          Serial.println(lS->getValue());          
+          Serial.println(lS->getValue(),3); // 3 digit afeter decimal separator          
         }
         else if (bSet) {
           lA = getActuator(word);

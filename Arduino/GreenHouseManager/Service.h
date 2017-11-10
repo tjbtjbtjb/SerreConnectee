@@ -26,6 +26,7 @@ class Service {                             // nota : this is a singleton class
     void              doSerialEvent();      // inside the serialEvent main function
     void              doLoop();             // inside the loop main function
     static void     (*softReset)(void);     // reset function at address 0
+    void              printAll();           // serial print of everything (!)
 
     void              addSensor(Sensor *) ; 
     int               getSensorCnt() const ;
