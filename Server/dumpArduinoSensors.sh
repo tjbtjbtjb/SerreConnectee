@@ -30,5 +30,22 @@ do
     LIGHT="U"
   fi
   echo "PUTVAL $HOSTNAME/$PROGNAME/ambiant_light interval=$INTERVAL N:$LIGHT"
-  
+
+  O2RATE=`$ASKARDUINO o2rate | awk '{print $2;}'`
+  if [ $? -ne 0 ]
+  then
+    O2RATE="U"
+  fi
+  echo "PUTVAL $HOSTNAME/$PROGNAME/o2_rate interval=$INTERVAL N:$O2RATE"
+
+  CO2PPM="U"
+  echo "PUTVAL $HOSTNAME/$PROGNAME/co2_ppm interval=$INTERVAL N:$CO2PPM"
+
+  TEST=`$ASKARDUINO volt | awk '{print $2;}'`
+  if [ $? -ne 0 ]
+  then 
+    TEST="U"
+  fi
+  echo "PUTVAL $HOSTNAME/$PROGNAME/test_3_3V interval=$INTERVAL N:$TEST"
+
 done
