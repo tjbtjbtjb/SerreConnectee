@@ -18,8 +18,8 @@ class DigitalActuator : public Actuator {
   public:
     DigitalActuator(String s,int pin) : Actuator(s), m_pin(pin) { pinMode(m_pin,OUTPUT); } ;
     virtual ~DigitalActuator() {} ;
-    void setValue(int val) const { digitalWrite(m_pin,val); } ;
-    void setValue(float val) const { setValue((val)?HIGH:LOW); }
+    void setValue(int val) { digitalWrite(m_pin,val); } ;
+    void setValue(float val) { setValue((val)?HIGH:LOW); }
   private:
     int m_pin;
 };

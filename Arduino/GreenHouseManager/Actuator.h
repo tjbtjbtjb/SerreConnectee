@@ -17,8 +17,8 @@
 class Actuator : public Device {
   public:
     Actuator(String s) : Device(s) {} ;
-    virtual void setValue(int ) const = 0 ;
-    virtual void setValue(float ) const = 0 ;
+    virtual void setValue(int ) = 0 ;
+    virtual void setValue(float ) = 0 ;
     virtual ~Actuator() {} ;
 };
 

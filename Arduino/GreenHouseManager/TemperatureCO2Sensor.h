@@ -18,7 +18,7 @@ class TemperatureCO2Sensor : public Sensor {
   public:
     TemperatureCO2Sensor(String s,CO2Sensor *c):Sensor(s) { m_pCO2 = c; }; 
     virtual ~TemperatureCO2Sensor() {} ;
-    float getValue() const {return m_pCO2->getTemperature(); } ;
+    float getValue() {return m_pCO2->getTemperature(); } ;
   private:
     CO2Sensor *m_pCO2;
 };

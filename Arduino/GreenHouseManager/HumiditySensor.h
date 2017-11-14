@@ -19,7 +19,7 @@ class HumiditySensor : public Sensor {
   public:
     HumiditySensor(String s,TemperatureSensor *t):Sensor(s) { m_pTemp = t; }; 
     virtual ~HumiditySensor() {} ;
-    float getValue() const {return m_pTemp->getDht()->readHumidity(); } ;
+    float getValue() {return m_pTemp->getDht()->readHumidity(); } ;
   private:
     TemperatureSensor *m_pTemp;
 };

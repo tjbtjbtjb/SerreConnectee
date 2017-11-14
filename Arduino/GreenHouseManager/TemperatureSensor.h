@@ -30,7 +30,7 @@ class TemperatureSensor : public Sensor {
   public:
     TemperatureSensor(String s, int p) : Sensor(s), m_pin(p)  { m_pDht = new DHT(m_pin, DHTTYPE);} ;
     virtual ~TemperatureSensor() {} ;
-    float getValue() const {return m_pDht->readTemperature(); } ;
+    float getValue() {return m_pDht->readTemperature(); } ;
   public:
     DHT* getDht() const {return m_pDht;};
   private:

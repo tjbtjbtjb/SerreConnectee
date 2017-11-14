@@ -20,7 +20,7 @@ class CO2Sensor : public Sensor {
   public:
     CO2Sensor(String, int, int) ; // name, rx, tx
     virtual  ~CO2Sensor() {} ;
-    float    getValue() const { return readData()?(float)getRawCO2PPM():-1. ; };
+    float    getValue() { return readData()?(float)getRawCO2PPM():-1. ; };
     float    getTemperature() { return readData()?(float)getRawTemperature():-300. ; };
     int      getRawCO2PPM() { return (int)m_data[2] * 256 + (int)m_data[3] ; } ;
     int      getRawTemperature() { return (int)m_data[4] - 40 ; } ;

@@ -17,7 +17,7 @@
 class Sensor : public Device {
   public:
     Sensor(String s) : Device(s) {} ;
-    virtual float getValue() const = 0 ;
+    virtual float getValue() = 0 ;
     virtual ~Sensor() {} ;
 };
 
