@@ -5,6 +5,8 @@ Avec une version >= 1.5.0, en ligne de commande :
 
 /usr/local/arduino-1.8.5/arduino --upload --port /dev/ttyACM1 --board arduino:avr:mega:cpu=atmega2560 Temperature.ino 
 
+--verify
+
 Reset USB
 ---------
 * Rechercher le numéro du port pour le device USB ACM
