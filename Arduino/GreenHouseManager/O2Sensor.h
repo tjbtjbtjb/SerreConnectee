@@ -17,7 +17,7 @@ class O2Sensor : public Sensor {
   public:
     O2Sensor(String s,int pin) : Sensor(s), m_pin(pin) {} ;
     virtual ~O2Sensor() {} ;
-    float getValue() const {return readO2Vout() * 0.21 / 0.21 * 100; /* in percent */ } ;
+    float getValue() const {return readO2Vout() * 0.21 / 2.0 * 100; /* in percent */ } ;
   private:
     float readO2Vout() const {
       long sum = 0;
