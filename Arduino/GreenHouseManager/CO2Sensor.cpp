@@ -13,7 +13,8 @@
       
 CO2Sensor::CO2Sensor(String s, int tx, int rx) 
   : Sensor(s), m_tx(tx), m_rx(rx) {   
-    m_pSerialSensor = new SoftwareSerial(tx,rx); 
+    m_pSerialSensor = new SoftwareSerial(tx,rx);
+    m_pSerialSensor->begin(9600);
 } ;
 
 bool CO2Sensor::readData() {
