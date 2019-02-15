@@ -1,0 +1,7 @@
+air_temperature    value:GAUGE:U:U
+air_humidity       value:GAUGE:0:100
+ambiant_light      value:GAUGE:0:100
+o2_rate            value:GAUGE:0:100
+co2_ppm            value:GAUGE:0:U
+co2_temperature    value:GAUGE:U:U
+test_3_3V          value:GAUGE:0:6
