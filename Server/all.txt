@@ -1,0 +1,25 @@
+sConnected devices ... 
+ * Found 14 sensors :
+Sensor 0 (LUX) : 0.13
+Sensor 1 (TEMP) : 21.70
+Sensor 2 (AIRHR) : 51.40
+Sensor 3 (GNDHR) : 1.96
+Sensor 4 (STOPSTEP) : 1.00
+Sensor 5 (FLUX) : 409.99
+Sensor 6 (THERMO) : 20.67
+Sensor 7 (AUTO) : 0.00
+Sensor 8 (ALARM) : 0.00
+Sensor 9 (FAN) : 0.00
+Sensor 10 (WATER) : 0.00
+Sensor 11 (MIST) : 0.00
+Sensor 12 (LIGHT) : 0.00
+Sensor 13 (HEAT) : 0.00
+ * Found 7 actuators :
+Actuator 0 (TESTLED) 
+Actuator 1 (ALARM) 
+Actuator 2 (FAN) 
+Actuator 3 (WATER) 
+Actuator 4 (MIST) 
+Actuator 5 (LIGHT) 
+Actuator 6 (HEAT) 
+

@@ -47,6 +47,11 @@ dmesg | grep tty
 
  * Le tour est jouė
 
+Eteindre l'USB (a verifier)
+---------------------------
+echo on > /sys/bus/usb/devices/usb1/power/level       # turn on
+echo suspend > /sys/bus/usb/devices/usb1/power/level  # turn off
+
 Configuration actuelle
 ----------------------
 

@@ -2,14 +2,26 @@
 
 import serial
 import sys
+import glob
 
-ser = serial.Serial('/dev/ttyACM1',9600)
-ser.write('get ' + sys.argv[1] + ' \n')
-ans=ser.readline()
-pre=ans.split()[0]
-if pre != 'ACK':
-  sys.stderr.write(pre + '\n')
+tty=glob.glob('/dev/ttyACM*')
+
+if len(tty) != 1:
+  sys.stderr.write('No (unique) /dev/ttyACM found. Exiting.');
   exit(1)
-else:
-  sys.stdout.write(ans)
 
+ser = serial.Serial(tty[0],9600,timeout=1)
+
+command=""
+i=0
+for s in sys.argv:
+	if i:
+		command += s + " " 
+	i=i+1
+command += "\n"
+
+ser.write(command)
+
+for l in ser:
+	ll=l.splitlines()[0]
+	print ll
