@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TALKARDUINO=/home/beau/Git/SerreConnectee/Server/talkArduino.py
+TALKARDUINO=/home/beau/Git/SerreConnectee/Server/talkArduino_v2.py
 
 HOSTNAME="arduino0"
 #.${COLLECTD_HOSTNAME:-`hostname -f`}"
@@ -10,9 +10,11 @@ test $# -eq 1 && INTERVAL=$1
 
 declare -A Descr
 Descr[LUX]=sensors/ambiant_lux
-Descr[TEMP]=sensors/air_temp
-Descr[AIRHR]=sensors/air_hr
-Descr[CPO2PPM]=sensors/co2_ppm
+Descr[OUTTEMP]=sensors/out_air_temp
+Descr[OUTAIRHR]=sensors/out_air_hr
+Descr[INTTEMP]=sensors/int_air_temp
+Descr[INTAIRHR]=sensors/int_air_hr
+Descr[CO2PPM]=sensors/co2_ppm
 Descr[GNDHR]=sensors/ground_hr
 Descr[STOPSTEP]=sensors/stop_step
 Descr[FLUX]=sensors/energy_flux
