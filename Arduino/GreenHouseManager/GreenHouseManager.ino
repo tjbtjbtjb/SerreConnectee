@@ -43,28 +43,13 @@ Service          *pSvc;
 // Live time
 LiveTimeInfo           lLiveTimeInfo("LIVETIME");
 DummySensor            lDummySensor("DUMMY");
-// Sensors
-//VoltageSensor        lVoltageSensor("VOLT",A2);
-//TemperatureSensor    lTemperatureSensor("TEMP",A0);
-//AirHumiditySensor    lAirHumiditySensor("HUMIDITY",&lTemperatureSensor);
-//LightSensor          lLightSensor("LIGHT",A4);
-//O2Sensor             lO2Sensor("O2RATE",A12);
-//CO2GroveSensor       lCO2Sensor("CO2PPM",A8,A9);
-//TemperatureCO2Sensor lTempCO2Sensor("TEMP2",&lCO2Sensor);
-DigitalSensor          lBit23("AUTO",23);  //is auto positive logic
-DigitalSensor          lBit25("HEAT",25,1);  //Chauffe negative logic
-DigitalSensor          lBit27("FAN",27,1);   //Fan negative logic
-DigitalSensor          lBit29("EAU",29,1);   //EV Eau negative logic
-DigitalSensor          lBit31("BRUME",31);   //Brume positive logic
-DigitalSensor          lBit33("LUX",33);     //Lumiere positive logic 
-DigitalSensor          lBit35("ALARM",35);   //
-DigitalSensor          lBit37("Butee",37,1); //butee negative logic
+DigitalSensor          lBit23("BIT23",23);
 
 #elif MY_ARDUINO == A_GREEN // Green house arduino -----------------------------------
 
 LiveTimeInfo         lLiveTimeInfo("LIVETIME");
 // Sensors
-
+DummySensor            lDummySensor("DUMMY");
 LightSensor          lLightSensor("LUX",A3);
 TemperatureSensor    lIntTemperatureSensor("INTTEMP",A2);
 TemperatureSensor    lOutTemperatureSensor("OUTTEMP",A15); 
@@ -102,30 +87,16 @@ DigitalSensor        lLedHeat("HEAT",25,1);
 #endif
 
 void setup() {
-  pSvc = Service::getInstance(24); // 24, the pin for the WD LED. If no arg, flashes the internal led.
+  pSvc = Service::getInstance(22); // 22, the pin for the WD LED. If no arg, flashes the internal led.
 
 #if MY_ARDUINO == A_TEST
   pSvc->addSensor(&lLiveTimeInfo);
   pSvc->addSensor(&lDummySensor);
-  //pSvc->addSensor(&lVoltageSensor);
-  //pSvc->addSensor(&lLightSensor);
-  //pSvc->addSensor(&lTemperatureSensor);
-  //pSvc->addSensor(&lAirHumiditySensor);
-  //pSvc->addSensor(&lO2Sensor);
-  //pSvc->addSensor(&lCO2Sensor);
-  //pSvc->addSensor(&lTempCO2Sensor);
-
   pSvc->addSensor(&lBit23);
-  pSvc->addSensor(&lBit25);
-  pSvc->addSensor(&lBit27);
-  pSvc->addSensor(&lBit29);
-  pSvc->addSensor(&lBit31);
-  pSvc->addSensor(&lBit33);
-  pSvc->addSensor(&lBit35);
-  pSvc->addSensor(&lBit37);
   
 #elif MY_ARDUINO == A_GREEN
   pSvc->addSensor(&lLiveTimeInfo);
+  //pSvc->addSensor(&lDummySensor);  // just for tests, will create a delay to test WD
   pSvc->addSensor(&lLightSensor);
   pSvc->addSensor(&lIntTemperatureSensor);
   pSvc->addSensor(&lOutTemperatureSensor);
