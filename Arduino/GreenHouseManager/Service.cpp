@@ -20,8 +20,10 @@ const int Service::sm_maxSensorCnt      = 32;
 const int Service::sm_maxActuatorCnt    = 16;
 const int Service::sm_maxStringLength   = 63;   
 
+
 // --- Creator ------------------------------------------------------------
-Service::Service() {
+Service::Service(int wd_pin) {
+  // Comm' init
   Serial.begin(9600); // init serial comm'  
   delay(100);
   Wire.begin();
@@ -29,8 +31,16 @@ Service::Service() {
   Serial.println("");
   Serial.println("GreenHouse Service Manager started. Waiting for commands now.");
   delay(5);
+
+  // About WD
   wdt_enable(WDTO_4S);
+  m_pinWdLed = wd_pin;
+  pinMode(m_pinWdLed,OUTPUT);
+  m_WdLedValue = LOW;
+  digitalWrite(m_pinWdLed,m_WdLedValue);
   //pinMode(LED_BUILTIN,OUTPUT);
+
+  // About sensors
   m_sensorCnt = 0;
   m_sensorArray = new Sensor* [sm_maxSensorCnt];
   m_actuatorCnt = 0;
@@ -38,9 +48,9 @@ Service::Service() {
 }
 
 // --- getInstance() -------------------------------------------------------
-Service* Service::getInstance() {
+Service* Service::getInstance(int wd_pin) {
   if ( ! sm_instance ) {
-    sm_instance = new Service(); 
+    sm_instance = new Service(wd_pin); 
   }
   return sm_instance;
 }
@@ -53,11 +63,12 @@ void Service::doLoop() {
     m_inputString = "";
     m_stringComplete = false;
   }
-  wdt_reset();
-/*  digitalWrite(LED_BUILTIN,HIGH);
+
+  //wd stuff
   delay(200);
-  digitalWrite(LED_BUILTIN,LOW);
-  delay(200);*/
+  m_WdLedValue = ! m_WdLedValue;
+  digitalWrite(m_pinWdLed,m_WdLedValue);
+  wdt_reset();
 }
 
 // --- doSerialEvent() : read serial input if any ---------------------------

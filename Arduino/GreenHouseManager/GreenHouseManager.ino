@@ -60,9 +60,6 @@ DigitalSensor          lBit33("LUX",33);     //Lumiere positive logic
 DigitalSensor          lBit35("ALARM",35);   //
 DigitalSensor          lBit37("Butee",37,1); //butee negative logic
 
-// Actuators
-DigitalActuator      lBuiltinLed("LED",LED_BUILTIN);
-
 #elif MY_ARDUINO == A_GREEN // Green house arduino -----------------------------------
 
 LiveTimeInfo         lLiveTimeInfo("LIVETIME");
@@ -78,9 +75,6 @@ DigitalSensor        lStopStepperSensor("STOPSTEP",9);
 VoltageSensor        lThermalFlux("FLUX",A0,1./400./12.1e-6);   // W / m2
 ThermoCoupleSensor   lThermoCouple("THERMO",10);
 CO2PulseSensor       lCO2Sensor("CO2PPM",2);
-
-// Digital Actuators
-DigitalActuator      lBuiltinLed("TESTLED",LED_BUILTIN,1); 
 
 // Dual Digital Actuator & Sensor 
 DigitalSensor        lAutoMode("AUTO",23);
@@ -108,7 +102,7 @@ DigitalSensor        lLedHeat("HEAT",25,1);
 #endif
 
 void setup() {
-  pSvc = Service::getInstance();
+  pSvc = Service::getInstance(13); // 24, the pin for the WD LED. If no arg, flashes the internal led.
 
 #if MY_ARDUINO == A_TEST
   pSvc->addSensor(&lLiveTimeInfo);
@@ -129,8 +123,6 @@ void setup() {
   pSvc->addSensor(&lBit33);
   pSvc->addSensor(&lBit35);
   pSvc->addSensor(&lBit37);
-
-  pSvc->addActuator(&lBuiltinLed);
   
 #elif MY_ARDUINO == A_GREEN
   pSvc->addSensor(&lLiveTimeInfo);
@@ -144,8 +136,6 @@ void setup() {
   pSvc->addSensor(&lThermalFlux);
   pSvc->addSensor(&lThermoCouple);
   pSvc->addSensor(&lCO2Sensor);
-
-  pSvc->addActuator(&lBuiltinLed);
 
   pSvc->addSensor(&lAutoMode);
   

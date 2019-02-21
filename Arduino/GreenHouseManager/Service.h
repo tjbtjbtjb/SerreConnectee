@@ -22,10 +22,10 @@
 class Service {                             // nota : this is a singleton class
   private:
     static Service*   sm_instance;          // storage
-    Service();                              // init, private constructor to prevent instancing
+    Service(int);                              // init, private constructor to prevent instancing
 
   public:
-    static Service*   getInstance();        // static access method
+    static Service*   getInstance(int wd_pin = LED_BUILTIN);        // static access method
     void              doSerialEvent();      // inside the serialEvent main function
     void              doLoop();             // inside the loop main function
     static void     (*softReset)(void);     // reset function at address 0
@@ -53,6 +53,9 @@ class Service {                             // nota : this is a singleton class
     Actuator**        m_actuatorArray;        // array of pointer of actuators
     int               m_actuatorCnt;          // nb of sensors  
     const static int  sm_maxActuatorCnt;      // max nb of sensors
+
+    int               m_pinWdLed;
+    int               m_WdLedValue;
 
   private:
     void              analyzeCommand(); 
