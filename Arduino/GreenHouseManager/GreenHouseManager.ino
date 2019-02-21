@@ -36,8 +36,8 @@ Service          *pSvc;
 #define A_TEST 0
 #define A_GREEN 1
 // Which arduino ? 
-//#define MY_ARDUINO A_GREEN
-#define MY_ARDUINO A_TEST
+#define MY_ARDUINO A_GREEN
+//#define MY_ARDUINO A_TEST
 
 #if MY_ARDUINO == A_TEST 
 // Live time
@@ -102,7 +102,7 @@ DigitalSensor        lLedHeat("HEAT",25,1);
 #endif
 
 void setup() {
-  pSvc = Service::getInstance(13); // 24, the pin for the WD LED. If no arg, flashes the internal led.
+  pSvc = Service::getInstance(24); // 24, the pin for the WD LED. If no arg, flashes the internal led.
 
 #if MY_ARDUINO == A_TEST
   pSvc->addSensor(&lLiveTimeInfo);
