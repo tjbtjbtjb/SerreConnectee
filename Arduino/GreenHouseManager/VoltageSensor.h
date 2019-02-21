@@ -16,11 +16,13 @@
 
 class VoltageSensor : public Sensor {
   public:
-    VoltageSensor(String s,int pin) : Sensor(s), m_pin(pin) {} ;
+    VoltageSensor(String s,int pin,float coef=1.) : Sensor(s), m_pin(pin), m_coef(coef) {
+      } ;
     virtual ~VoltageSensor() {} ;
-    float getValue() {return 5.*analogRead(m_pin)/1023;} ;
+    float getValue() {return m_coef*5.*analogRead(m_pin)/1023;} ;
   private:
     int m_pin;
+    float m_coef;
 };
 
 #endif

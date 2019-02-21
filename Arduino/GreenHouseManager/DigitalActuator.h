@@ -16,12 +16,16 @@
 
 class DigitalActuator : public Actuator {
   public:
-    DigitalActuator(String s,int pin) : Actuator(s), m_pin(pin) { pinMode(m_pin,OUTPUT); } ;
+    DigitalActuator(String s,int pin,int v_init=0,int direct=0) : Actuator(s), m_pin(pin), m_direct(direct) { 
+      pinMode(m_pin,OUTPUT); 
+      setValue(v_init);
+    } ;
     virtual ~DigitalActuator() {} ;
-    void setValue(int val) { digitalWrite(m_pin,val); } ;
+    void setValue(int val) { digitalWrite(m_pin,(m_direct<0)?!val:val); } ;
     void setValue(float val) { setValue((val)?HIGH:LOW); }
   private:
     int m_pin;
+    int m_direct;
 };
 
 #endif

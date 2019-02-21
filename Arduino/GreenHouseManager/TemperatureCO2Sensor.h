@@ -12,15 +12,15 @@
 #ifndef _TEMPERATURECO2_SENSOR_H_
 #define _TEMPERATURECO2_SENSOR_H_
 
-#include "CO2Sensor.h"
+#include "CO2GroveSensor.h"
 
 class TemperatureCO2Sensor : public Sensor {
   public:
-    TemperatureCO2Sensor(String s,CO2Sensor *c):Sensor(s) { m_pCO2 = c; }; 
+    TemperatureCO2Sensor(String s,CO2GroveSensor *c):Sensor(s) { m_pCO2 = c; }; 
     virtual ~TemperatureCO2Sensor() {} ;
     float getValue() {return m_pCO2->getTemperature(); } ;
   private:
-    CO2Sensor *m_pCO2;
+    CO2GroveSensor *m_pCO2;
 };
 
 #endif

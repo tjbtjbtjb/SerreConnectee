@@ -19,7 +19,10 @@ class DummySensor : public Sensor {
   public:
     DummySensor(String s) : Sensor(s) {} ;
     virtual ~DummySensor() {} ;
-    float getValue() const {return 12.345;} ;
+    float getValue() {
+       delay(5000);
+       return 12.345;
+    } ;
 };
 
 #endif

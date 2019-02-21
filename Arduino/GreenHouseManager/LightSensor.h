@@ -1,5 +1,5 @@
 /**
- * @file      LightSensor.h
+    * @file      LightSensor.h
  * @Author    Tristan Beau ( tristan.beau@univ-paris-diderot.fr )
  * @date      Light sensor class, based on the voltage class
  * 

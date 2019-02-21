@@ -12,7 +12,10 @@
 #ifndef _SERVICE_H_
 #define _SERVICE_H_
 
-#include "Arduino.h"                    //to get Serial object
+#include <Arduino.h>                    //to get Serial object
+#include <Wire.h>
+#include <avr/wdt.h>
+
 #include "Sensor.h"
 #include "Actuator.h"
 

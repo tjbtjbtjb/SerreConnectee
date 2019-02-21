@@ -1,3 +1,4 @@
+
 /**
  * @file      Service.cpp
  * @Author    Tristan Beau ( tristan.beau@univ-paris-diderot.fr )
@@ -15,16 +16,21 @@
 // --- init of members -------------------------------------------
 void (*Service::softReset)(void)        = 0;  // function pointer to NULL address
 Service* Service::sm_instance           = 0;  // instance init on demand
-const int Service::sm_maxSensorCnt      = 10;
-const int Service::sm_maxActuatorCnt    = 10;
+const int Service::sm_maxSensorCnt      = 32;
+const int Service::sm_maxActuatorCnt    = 16;
 const int Service::sm_maxStringLength   = 63;   
 
 // --- Creator ------------------------------------------------------------
 Service::Service() {
   Serial.begin(9600); // init serial comm'  
+  delay(100);
+  Wire.begin();
+  delay(500);
+  Serial.println("");
   Serial.println("GreenHouse Service Manager started. Waiting for commands now.");
   delay(5);
-  pinMode(LED_BUILTIN,OUTPUT);
+  wdt_enable(WDTO_4S);
+  //pinMode(LED_BUILTIN,OUTPUT);
   m_sensorCnt = 0;
   m_sensorArray = new Sensor* [sm_maxSensorCnt];
   m_actuatorCnt = 0;
@@ -47,6 +53,7 @@ void Service::doLoop() {
     m_inputString = "";
     m_stringComplete = false;
   }
+  wdt_reset();
 /*  digitalWrite(LED_BUILTIN,HIGH);
   delay(200);
   digitalWrite(LED_BUILTIN,LOW);
@@ -72,7 +79,8 @@ void Service::doSerialEvent() {
 // --- Service::printAll ----------------------------------------------------
 void Service::printAll() {
   int i;
-  String s="Connected devices : \n";
+  String s="\n  Connected devices ... \n";
+  s += " * Found " ; s+= m_sensorCnt ; s+= " sensors :\n";
   for (i=0;i<m_sensorCnt;i++) {
     s += "Sensor ";
     s += i ;
@@ -82,6 +90,7 @@ void Service::printAll() {
     s += getSensor(i)->getValue();
     s += "\n";
   }
+  s += " * Found " ; s+= m_actuatorCnt; s+= " actuators :\n";
   for (i=0;i<m_actuatorCnt;i++) {
     s += "Actuator " ;
     s += i ;
@@ -89,6 +98,7 @@ void Service::printAll() {
     s += getActuator(i)->getID() ;
     s += ") \n";
   }
+  Serial.println(s);
 }
 
 // --- Service::addSensor ---------------------------------------------------
@@ -166,7 +176,7 @@ void Service::analyzeCommand() {
       case 0: // first word analysis
         if      ( ! strncmp(word,"SET",3) ) bSet=true;
         else if ( ! strncmp(word,"GET",3) ) bGet=true;
-	else if ( ! strncmp(word,"ALL",3) ) { printAll(); bContinue=false; }
+	      else if ( ! strncmp(word,"ALL",3) ) { printAll(); bContinue=false; }
         else if ( ! strncmp(word,"RESET",3) ) softReset();
         else {
           Serial.println("UNK");
@@ -205,4 +215,3 @@ void Service::analyzeCommand() {
     if ( !bContinue ) break;
   }
 }
-
