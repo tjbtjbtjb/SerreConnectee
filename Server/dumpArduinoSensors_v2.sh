@@ -9,6 +9,7 @@ INTERVAL="${COLLECTD_INTERVAL:-60}"
 test $# -eq 1 && INTERVAL=$1
 
 declare -A Descr
+Descr[LIVETIME]=status/live_time
 Descr[LUX]=sensors/ambiant_lux
 Descr[OUTTEMP]=sensors/out_air_temp
 Descr[OUTAIRHR]=sensors/out_air_hr

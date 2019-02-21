@@ -1,3 +1,4 @@
+live_time          value:GAUGE:0:U
 ambiant_lux        value:GAUGE:0:U
 out_air_temp       value:GAUGE:U:U
 out_air_hr         value:GAUGE:0:U
