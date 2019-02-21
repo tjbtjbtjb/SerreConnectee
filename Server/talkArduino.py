@@ -24,4 +24,4 @@ ser.write(command)
 
 for l in ser:
 	ll=l.splitlines()[0]
-	print ll
+	print(ll)
