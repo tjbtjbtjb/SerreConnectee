@@ -1,6 +1,8 @@
 ambiant_lux        value:GAUGE:0:U
-air_temp           value:GAUGE:U:U
-air_hr             value:GAUGE:0:U
+out_air_temp       value:GAUGE:U:U
+out_air_hr         value:GAUGE:0:U
+int_air_temp       value:GAUGE:U:U
+int_air_hr         value:GAUGE:0:U
 co2_ppm            value:GAUGE:0:U
 ground_hr          value:GAUGE:0:U
 stop_step          value:GAUGE:0:1
