@@ -50,7 +50,7 @@ DigitalSensor          lBit23("BIT23",23);
 
 LiveTimeInfo         lLiveTimeInfo("LIVETIME");
 // Sensors
-DummySensor            lDummySensor("DUMMY");
+//DummySensor            lDummySensor("DUMMY");
 LightSensor          lLightSensor("LUX",A3);
 TemperatureSensor    lIntTemperatureSensor("INTTEMP",A2);
 TemperatureSensor    lOutTemperatureSensor("OUTTEMP",A15); 
