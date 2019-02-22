@@ -28,7 +28,7 @@ class DigitalActuator : public Actuator {
     void setValue(int val) { 
       int v = (m_direct<0)?!val:val;
       digitalWrite(m_pin,v);
-      EEPROM.update(m_pin,v); // re-write value only if value is updated (better for EEPROM life time according to documentation
+      EEPROM.update(m_pin,val); // re-write value only if value is updated (better for EEPROM life time according to documentation
     } ;
     void setValue(float val) { setValue((val)?HIGH:LOW); }
   private:
