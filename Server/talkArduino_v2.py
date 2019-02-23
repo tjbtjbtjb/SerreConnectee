@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 
 import serial
 import sys
@@ -9,7 +9,7 @@ import termios
 tty=glob.glob('/dev/ttyACM*')
 
 if len(tty) != 1:
-  sys.stderr.write('No (unique) /dev/ttyACM found. Exiting.');
+  sys.stderr.write('No (unique) /dev/ttyACM found. Exiting.\n');
   exit(1)
 
 arduino = serial.Serial()
