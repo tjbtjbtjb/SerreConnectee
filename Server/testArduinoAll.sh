@@ -10,7 +10,7 @@ do
   if [ $? -eq 0 ]
   then
     x=`expr $x + 1`
-    sleep 5
+    sleep 3
   else
     x=0
   fi

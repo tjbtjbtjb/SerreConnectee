@@ -30,7 +30,7 @@ Service::Service(int wd_pin) {
   Wire.begin();
   delay(500);
   Serial.println("");
-  Serial.println("GreenHouse Service Manager started. Waiting for commands now.");
+  Serial.println("GreenHouse Service Manager started. Waiting for commands now.\nACK INIT OK\n");
   delay(5);
 
   // About WD
@@ -74,9 +74,10 @@ void Service::doLoop() {
 
 // --- doSerialEvent() : read serial input if any ---------------------------
 void Service::doSerialEvent() {
+  char inChar;
   while (Serial.available()) {
     // get the new byte:
-    char inChar = (char)Serial.read();
+    inChar = (char)Serial.read();
     // add it to the inputString:
     m_inputString += inChar;
     // if the incoming character is a newline, set a flag
@@ -111,6 +112,7 @@ void Service::printAll() {
     s += getActuator(i)->getID() ;
     s += ") \n";
   }
+  s += "ACK ALL\n";
   Serial.println(s);
   Serial.flush();
 }
@@ -178,10 +180,12 @@ void Service::analyzeCommand() {
   char *word;
   int i=0;
   boolean bContinue=true, bGet=false, bSet=false;
-  char *s = new char[sm_maxStringLength];
+  char *s;
+  char s0[sm_maxStringLength];
   Actuator *lA = NULL;
   Sensor *lS = NULL;
-  
+
+  s = (char*)s0;
   snprintf(s,sm_maxStringLength,"%s",m_inputString.c_str());
   s[strlen(s)-1]='\0'; //suppress the ending \n
  
@@ -193,7 +197,7 @@ void Service::analyzeCommand() {
 	      else if ( ! strncmp(word,"ALL",3) ) { printAll(); bContinue=false; }
         else if ( ! strncmp(word,"RESET",3) ) softReset();
         else {
-          Serial.println("UNK");
+          Serial.println("ACK UNK CMD");
           bContinue=false;
         }
         break;
@@ -201,7 +205,7 @@ void Service::analyzeCommand() {
         if (bGet) {
           lS = getSensor(word);
           if ( lS == NULL ) { // that sensor does not exist
-            Serial.println("ERR");
+            Serial.println("ACK ERR SENSOR");
             bContinue = false;
             break;
           }
@@ -210,8 +214,8 @@ void Service::analyzeCommand() {
         }
         else if (bSet) {
           lA = getActuator(word);
-          if ( lA == NULL ) { // that sensor does not exist
-            Serial.println("ERR");
+          if ( lA == NULL ) { // that actuator does not exist
+            Serial.println("ACK ERR ACTUATOR");
             bContinue = false;
             break;
           }
@@ -221,7 +225,7 @@ void Service::analyzeCommand() {
       case 2: //third word analysis
         if (bSet) {
           lA->setValue( (float) atof(word) );
-          Serial.println("ACK");
+          Serial.println("ACK SET ACTUATOR OK");
         }
       default:
         break;//Serial.println("Not implemented yet");

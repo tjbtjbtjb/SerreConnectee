@@ -34,8 +34,18 @@ for s in sys.argv:
 	i=i+1
 command += "\n"
 
+arduino.reset_input_buffer()
 arduino.write(command)
+#arduino.flush()
 
 for l in arduino:
 	ll=l.splitlines()[0]
 	print(ll)
+	ret=ll.split()
+	if len(ret) >= 1 :
+		if ret[0] == 'ACK' :
+			break	
+
+arduino.reset_input_buffer()
+arduino.reset_output_buffer()
+arduino.close()
