@@ -24,6 +24,7 @@ const int Service::sm_maxStringLength   = 63;
 // --- Creator ------------------------------------------------------------
 Service::Service(int wd_pin) {
   // Comm' init
+  delay(500);
   Serial.begin(9600); // init serial comm'  
   delay(100);
   Wire.begin();
@@ -85,6 +86,7 @@ void Service::doSerialEvent() {
       m_inputString.toUpperCase();
     }
   }
+  delay(10);
 }
 
 // --- Service::printAll ----------------------------------------------------
@@ -110,6 +112,7 @@ void Service::printAll() {
     s += ") \n";
   }
   Serial.println(s);
+  Serial.flush();
 }
 
 // --- Service::addSensor ---------------------------------------------------
@@ -225,4 +228,5 @@ void Service::analyzeCommand() {
     }
     if ( !bContinue ) break;
   }
+  Serial.flush();
 }
