@@ -32,6 +32,14 @@
 #include "MotorActuator.h"
 //#include "Buzzer.h"
 
+// --- Static constant definitions
+
+const int Service::sm_maxSensorCnt      = 32;
+const int Service::sm_maxActuatorCnt    = 16;
+const unsigned long Sensor::sm_maxTime = 10000 ; // in milliseconds
+const unsigned long Service::sm_delayDeepLoop = 200; 
+const int Service::sm_loopsBtwDisplayUpdates = 25; // roughly 10 seconds 
+
 Service          *pSvc;
 
 #define A_TEST 0
