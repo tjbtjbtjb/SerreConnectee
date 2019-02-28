@@ -3,6 +3,7 @@
  * @file      Service.cpp
  * @Author    Tristan Beau ( tristan.beau@univ-paris-diderot.fr )
  * @date      November, 2017
+ * @RevDate   February, 2019
  * @brief     Class implementation for Green House services
  * 
  * Detailed description
@@ -16,10 +17,8 @@
 // --- init of members -------------------------------------------
 void (*Service::softReset)(void)        = 0;  // function pointer to NULL address
 Service* Service::sm_instance           = 0;  // instance init on demand
-const int Service::sm_maxSensorCnt      = 32;
-const int Service::sm_maxActuatorCnt    = 16;
-const int Service::sm_maxStringLength   = 63;   
 
+const int Service::sm_maxStringLength   = 63; 
 
 // --- Creator ------------------------------------------------------------
 Service::Service(int wd_pin) {
@@ -59,14 +58,19 @@ Service* Service::getInstance(int wd_pin) {
 // --- doLoop() ------------------------------------------------------------
 void Service::doLoop() {
   static int i=0;
+  int k;
   if (m_stringComplete) {
     analyzeCommand();
     m_inputString = "";
     m_stringComplete = false;
   }
 
+  // sensor value update
+  if ( !i ) for (k=0;k<m_sensorCnt;k++) getSensor(k)->getLastValue();
+  if ( i++ > sm_loopsBtwDisplayUpdates ) i=0; // roughly 5 seconds if delay(200) in wd stuff just below
+  
   //wd stuff
-  delay(200);
+  delay(sm_delayDeepLoop);
   m_WdLedValue = ! m_WdLedValue;
   digitalWrite(m_pinWdLed,m_WdLedValue);
   wdt_reset();
@@ -101,7 +105,7 @@ void Service::printAll() {
     s += " (" ;
     s += getSensor(i)->getID();
     s += ") : " ;
-    s += getSensor(i)->getValue();
+    s += getSensor(i)->getLastValue();
     s += "\n";
   }
   s += " * Found " ; s+= m_actuatorCnt; s+= " actuators :\n";
@@ -210,7 +214,7 @@ void Service::analyzeCommand() {
             break;
           }
           Serial.print("ACK "); 
-          Serial.println(lS->getValue(),3); // 3 digit afeter decimal separator          
+          Serial.println(lS->getLastValue(),3); // 3 digit after decimal separator          
         }
         else if (bSet) {
           lA = getActuator(word);

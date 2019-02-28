@@ -57,6 +57,9 @@ class Service {                             // nota : this is a singleton class
     int               m_pinWdLed;
     int               m_WdLedValue;
 
+    static const unsigned long     sm_delayDeepLoop; // delay in milliseconds in the main deep loop (related to wd reset)
+    static const int  sm_loopsBtwDisplayUpdates; // nb of loop between update of sensors on lcd display
+
   private:
     void              analyzeCommand(); 
 };
