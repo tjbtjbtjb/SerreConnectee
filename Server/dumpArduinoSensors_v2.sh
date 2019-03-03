@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TALKARDUINO=/home/beau/Git/SerreConnectee/Server/talkArduino_v2.py
+TALKARDUINO=/home/beau/Git/SerreConnectee/Server/talkArduino_v3.py
 
 HOSTNAME="arduino0"
 #.${COLLECTD_HOSTNAME:-`hostname -f`}"
