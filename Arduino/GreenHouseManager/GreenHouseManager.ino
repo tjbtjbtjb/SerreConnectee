@@ -32,6 +32,14 @@
 #include "MotorActuator.h"
 //#include "Buzzer.h"
 
+// --- Static constant definitions
+
+const int Service::sm_maxSensorCnt      = 32;
+const int Service::sm_maxActuatorCnt    = 16;
+const unsigned long Sensor::sm_maxTime = 10000 ; // in milliseconds
+const unsigned long Service::sm_delayDeepLoop = 200; 
+const int Service::sm_loopsBtwDisplayUpdates = 25; // roughly 10 seconds 
+
 Service          *pSvc;
 
 #define A_TEST 0
@@ -88,7 +96,7 @@ DigitalSensor        lLedHeat("HEAT",25,1);
 #endif
 
 void setup() {
-  pSvc = Service::getInstance(); // 22, the pin for the WD LED. If no arg, flashes the internal led.
+  pSvc = Service::getInstance(22); // 22, the pin for the WD LED. If no arg, flashes the internal led.
 
 #if MY_ARDUINO == A_TEST
   pSvc->addSensor(&lLiveTimeInfo);
