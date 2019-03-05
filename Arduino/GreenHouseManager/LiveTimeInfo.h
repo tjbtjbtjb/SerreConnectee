@@ -16,7 +16,7 @@
 
 class LiveTimeInfo : public Sensor {
   public:
-    LiveTimeInfo(String s) : Sensor(s) {  } ;
+    LiveTimeInfo(String s) : Sensor(s,true,0) {  } ;  // by default, display on screen
     virtual ~LiveTimeInfo() {} ;
     float getValue() {
       return ( millis()/1000 ) ;
