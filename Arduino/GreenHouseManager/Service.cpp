@@ -46,11 +46,6 @@ Service::Service(int wd_pin) {
   //delay(2000);
   //Setting text mode for LCD, add a title.
   m_LCD.WorkingModeConf(OFF, ON, WM_CharMode);  // Logo OFF, ScreenLight ON
-  m_LCD.CharGotoXY(0, 0);      //Set the start coordinate.
-  m_LCD.FontModeConf(Font_6x12, FM_MNL_AAA, WHITE_BAC);
-  //m_LCD.print("  ==> Serre USPC <==");m_LCD.print(HFILL_LINE);
-  m_LCD.print(" \\(^-^)/  Serre USPC" HFILL_LINE); // see e.g. http://1lineart.kulaone.com/#/
-  m_LCD.FontModeConf(Font_6x8, FM_MNL_AAA, BLACK_BAC); // manual newline
 
   // About WD
   wdt_enable(WDTO_4S);
@@ -84,8 +79,14 @@ void Service::doLoop() {
     m_stringComplete = false;
   }
 
-  // sensor value update
+  // sensor value update and screen display
   if ( !i ) {
+    m_LCD.CleanAll(WHITE);    //Erase all
+    m_LCD.CharGotoXY(0, 0);      //Set the start coordinate.
+    m_LCD.FontModeConf(Font_6x12, FM_MNL_AAA, WHITE_BAC);
+    //m_LCD.print("  ==> Serre USPC <==");m_LCD.print(HFILL_LINE);
+    m_LCD.print(" \\(^-^)/  Serre USPC" HFILL_LINE); // see e.g. http://1lineart.kulaone.com/#/
+    m_LCD.FontModeConf(Font_6x8, FM_MNL_AAA, BLACK_BAC); // manual newline
     m_LCD.CharGotoXY(0,13);      //Set the start coordinate.
     // print last command and status
     m_LCD.print("@");m_LCD.print(m_lastInputString);m_LCD.print(char(29));m_LCD.print(m_lastStatusString);m_LCD.print(HFILL_LINE);
@@ -93,7 +94,7 @@ void Service::doLoop() {
       float v = getSensor(k)->getLastValue();
       if ( getSensor(k)->getDisplay() == true ) {
           m_LCD.print(getSensor(k)->getID());m_LCD.print(" : " HFILL_LINE);
-          m_LCD.CharGotoXY(60,(21+8*x++)%64); // align value display
+          m_LCD.CharGotoXY(60,(21+8*x++)%60); // align value display
           m_LCD.print(String(v,getSensor(k)->getPrecision()));m_LCD.print(HFILL_LINE);
       }
     }
