@@ -65,7 +65,7 @@ TemperatureSensor    lIntTemperatureSensor("INTTEMP",A2);
 TemperatureSensor    lOutTemperatureSensor("OUTTEMP",A15); 
 AirHumiditySensor    lIntAirHumiditySensor("INTAIRHR",&lIntTemperatureSensor);
 AirHumiditySensor    lOutAirHumiditySensor("OUTAIRHR",&lOutTemperatureSensor);
-VoltageSensor        lGroundHumiditySensor("GNDHR",A1);
+VoltageSensor        lGroundHumiditySensor("GNDHR",A1,100./5.); // try to give in %
 DigitalSensor        lStopStepperSensor("STOPSTEP",9);
 VoltageSensor        lThermalFlux("FLUX",A0,1./400./12.1e-6);   // W / m2
 ThermoCoupleSensor   lThermoCouple("THERMO",10);
@@ -142,7 +142,7 @@ void setup() {
 
   //display default modification (Anne recommandation)
   lOutTemperatureSensor.setDisplay(false);
-  lGroundHumiditySensor.setDisplay(true); lGroundHumiditySensor.setPrecision(3); // change default value
+  lGroundHumiditySensor.setDisplay(true); lGroundHumiditySensor.setPrecision(1); // change default value
   lThermoCouple.setDisplay(true); lThermoCouple.setPrecision(1);
   lThermalFlux.setDisplay(true); lThermalFlux.setPrecision(1);
 
