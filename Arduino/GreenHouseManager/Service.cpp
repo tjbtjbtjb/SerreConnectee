@@ -88,7 +88,7 @@ void Service::doLoop() {
   if ( !i ) {
     m_LCD.CharGotoXY(0,13);      //Set the start coordinate.
     // print last command and status
-    m_LCD.print(m_lastInputString );m_LCD.print(char(29));m_LCD.print(m_lastStatusString);m_LCD.print(HFILL_LINE);
+    m_LCD.print("@");m_LCD.print(m_lastInputString);m_LCD.print(char(29));m_LCD.print(m_lastStatusString);m_LCD.print(HFILL_LINE);
     for (k=0,x=0;k<m_sensorCnt;k++) {
       float v = getSensor(k)->getLastValue();
       if ( getSensor(k)->getDisplay() == true ) {
