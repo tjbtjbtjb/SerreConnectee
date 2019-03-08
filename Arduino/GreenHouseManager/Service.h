@@ -18,6 +18,8 @@
 
 #include "Sensor.h"
 #include "Actuator.h"
+#include <I2C_LCD.h>
+#define HFILL_LINE "                                \n"
 
 class Service {                             // nota : this is a singleton class
   private:
@@ -30,6 +32,7 @@ class Service {                             // nota : this is a singleton class
     void              doLoop();             // inside the loop main function
     static void     (*softReset)(void);     // reset function at address 0
     void              printAll();           // serial print of everything (!)
+    void              printHelp();          // serial print the help of commands
 
     void              addSensor(Sensor *) ; 
     int               getSensorCnt() const ;
@@ -43,6 +46,9 @@ class Service {                             // nota : this is a singleton class
     
   private:
     String            m_inputString ;       // a string to hold incoming data
+    String            m_lastInputString ;   // a last command received
+    String            m_lastStatusString ;  // a string with status
+    
     boolean           m_stringComplete ;    // whether the string is complete
     const static int  sm_maxStringLength;
     
@@ -60,6 +66,8 @@ class Service {                             // nota : this is a singleton class
     static const unsigned long     sm_delayDeepLoop; // delay in milliseconds in the main deep loop (related to wd reset)
     static const int  sm_loopsBtwDisplayUpdates; // nb of loop between update of sensors on lcd display
 
+    I2C_LCD           m_LCD;
+   
   private:
     void              analyzeCommand(); 
 };

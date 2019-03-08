@@ -28,7 +28,7 @@
 
 class TemperatureSensor : public Sensor {
   public:
-    TemperatureSensor(String s, int p) : Sensor(s), m_pin(p)  { m_pDht = new DHT(m_pin, DHTTYPE);} ;
+    TemperatureSensor(String s, int p) : Sensor(s,true,1), m_pin(p)  { m_pDht = new DHT(m_pin, DHTTYPE);} ; // By default, display info on screen
     virtual ~TemperatureSensor() {} ;
     float getValue() {return m_pDht->readTemperature(); } ;
   public:
