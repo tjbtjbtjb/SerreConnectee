@@ -37,7 +37,7 @@ do
   do
     d=`echo $i | awk -F: '{print $1}'`
     HOSTNAME=`echo $i | awk -F: '{print $2}'`
-    echo $d $HOSTNAME
+    #echo $d $HOSTNAME
     $TALKARDUINO $d all | grep Sensor | while read i 
     do
       ID=`echo $i | sed 's,.*(\(.*\)).*,\1,'`
