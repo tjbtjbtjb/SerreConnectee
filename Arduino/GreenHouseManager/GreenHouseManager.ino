@@ -43,6 +43,8 @@ uint8_t I2C_LCD_ADDRESS = 0x51;  //Device address setting, default: 0x51
 
 Service          *pSvc;
 
+#define SOFTWARE_VERSION 20190311
+
 #define A_TEST 0
 #define A_GREEN 1
 // Which arduino ? 
@@ -59,7 +61,7 @@ DigitalSensor          lBit23("BIT23",23);
 
 LiveTimeInfo         lLiveTimeInfo("LIVETIME");
 // Sensors
-//DummySensor            lDummySensor("DUMMY");
+DummySensor          lVersionSensor("VERSION",(SOFTWARE_VERSION));
 LightSensor          lLightSensor("LUX",A3);
 TemperatureSensor    lIntTemperatureSensor("INTTEMP",A2);
 TemperatureSensor    lOutTemperatureSensor("OUTTEMP",A15); 
@@ -106,7 +108,7 @@ void setup() {
   
 #elif MY_ARDUINO == A_GREEN
   pSvc->addSensor(&lLiveTimeInfo);
-  //pSvc->addSensor(&lDummySensor);  // just for tests, will create a delay to test WD
+  pSvc->addSensor(&lVersionSensor); 
   pSvc->addSensor(&lLightSensor);
   pSvc->addSensor(&lIntTemperatureSensor);
   pSvc->addSensor(&lOutTemperatureSensor);
