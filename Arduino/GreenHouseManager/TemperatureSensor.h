@@ -31,6 +31,9 @@ class TemperatureSensor : public Sensor {
     TemperatureSensor(String s, int p) : Sensor(s,true,1), m_pin(p)  { m_pDht = new DHT(m_pin, DHTTYPE);} ; // By default, display info on screen
     virtual ~TemperatureSensor() {} ;
     float getValue() {return m_pDht->readTemperature(); } ;
+    String getLastValueAsString() { 
+      return String(getLastValue(),getPrecision()) + " Celsius";
+    }
   public:
     DHT* getDht() const {return m_pDht;};
   private:

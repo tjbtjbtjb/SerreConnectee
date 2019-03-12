@@ -43,7 +43,7 @@ uint8_t I2C_LCD_ADDRESS = 0x51;  //Device address setting, default: 0x51
 
 Service          *pSvc;
 
-#define SOFTWARE_VERSION 20190311
+#define SOFTWARE_VERSION 190312
 
 #define A_TEST 0
 #define A_GREEN 1
@@ -67,14 +67,14 @@ TemperatureSensor    lIntTemperatureSensor("INTTEMP",A2);
 TemperatureSensor    lOutTemperatureSensor("OUTTEMP",A15); 
 AirHumiditySensor    lIntAirHumiditySensor("INTAIRHR",&lIntTemperatureSensor);
 AirHumiditySensor    lOutAirHumiditySensor("OUTAIRHR",&lOutTemperatureSensor);
-VoltageSensor        lGroundHumiditySensor("GNDHR",A1,100./5.); // try to give in %
+VoltageSensor        lGroundHumiditySensor("GNDHR",A1,100./5.,"%"); // try to give in %
 DigitalSensor        lStopStepperSensor("STOPSTEP",9);
-VoltageSensor        lThermalFlux("FLUX",A0,1./400./12.1e-6);   // W / m2
+VoltageSensor        lThermalFlux("FLUX",A0,1./400./12.1e-6,"W/m2");   // in W / m2 ? 
 ThermoCoupleSensor   lThermoCouple("THERMO",10);
 CO2PulseSensor       lCO2Sensor("CO2PPM",2);
 
 // Dual Digital Actuator & Sensor 
-DigitalSensor        lAutoMode("AUTO",23);
+DigitalSensor        lAutoMode("AUTO",23); // ! AUTO : Reserved name, see in service
 
 DigitalActuator      lAlarm("ALARM",A8,0);
 DigitalSensor        lLedAlarm("ALARM",35);

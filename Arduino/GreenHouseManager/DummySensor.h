@@ -18,14 +18,17 @@
 
 class DummySensor : public Sensor {
   public:
-    DummySensor(String s, float val=0) : Sensor(s),m_value(val) {} ;
+    DummySensor(String s, unsigned long val) : Sensor(s,false,0),m_value(val) {} ;
     virtual ~DummySensor() {} ;
     float getValue() {
        delay(50);
-       return m_value;
+       return 1.*m_value;
     } ;
+    String getLastValueAsString() {
+      return String(m_value);
+    }
     private:
-      float m_value;
+      unsigned long m_value;
 };
 
 #endif

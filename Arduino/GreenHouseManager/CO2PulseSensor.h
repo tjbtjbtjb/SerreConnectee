@@ -29,6 +29,9 @@ class CO2PulseSensor : public Sensor {
 
       return 1.*ppm ; 
     } ;
+    String getLastValueAsString() { 
+      return String(getLastValue(),getPrecision()) + " ppm";
+    };
   private:
     int m_pin;
 };
