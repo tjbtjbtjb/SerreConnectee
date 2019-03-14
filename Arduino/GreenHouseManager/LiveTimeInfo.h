@@ -21,7 +21,18 @@ class LiveTimeInfo : public Sensor {
     float getValue() {
       return ( millis()/1000 ) ;
     } ;
-//  private:
+    String getLastValueAsString() {
+      unsigned int d,h,m,s;
+      unsigned long r=getLastValue();
+      d=r/sm_day;  r=r%sm_day;
+      h=r/sm_hour; r=r%sm_hour;
+      m=r/sm_min;  s=r%sm_min;
+      return String(d) + "d" + String(h) +"h" + String(m) + "m" + String(s) + "s";
+    }
+  private:
+    static const unsigned long sm_min = 60;
+    static const unsigned long sm_hour = 3600;
+    static const unsigned long sm_day = 86400;
 };
 
 #endif

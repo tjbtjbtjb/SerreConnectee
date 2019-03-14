@@ -91,15 +91,28 @@ void Service::doLoop() {
     // print last command and status
     m_LCD.print("@");m_LCD.print(m_lastInputString);m_LCD.print(char(29));m_LCD.print(m_lastStatusString);m_LCD.print(HFILL_LINE);
     for (k=0,x=0;k<m_sensorCnt;k++) {
-      float v = getSensor(k)->getLastValue();
+      String vs = getSensor(k)->getLastValueAsString();
+      // display on LCD screen
       if ( getSensor(k)->getDisplay() == true && x<5 ) { // (only 5 lines available)
           m_LCD.print(getSensor(k)->getID());m_LCD.print(" : " HFILL_LINE);
           m_LCD.CharGotoXY(60,(21+8*x++)%60); // align value display
-          m_LCD.print(String(v,getSensor(k)->getPrecision()));m_LCD.print(HFILL_LINE);
+          m_LCD.print(vs);m_LCD.print(HFILL_LINE);
       }
     }
     for (k=x;k<5;k++) m_LCD.print(HFILL_LINE); // to blank screen after last displayed sensor info
+
+    // if in manual mode, force the state of the actuator to the sensor value. Assume sensor name = actuator name
+    if ( ! getSensor("AUTO")->getLastValue() ) {
+      for (k=0;k<m_actuatorCnt;k++) {
+        Sensor *s=0; 
+        s=getSensor(getActuator(k)->getID());
+        if ( s ) {
+          getActuator(k)->setValue(s->getLastValue());
+        }
+      }
+    }
   }
+
   if ( i++ > sm_loopsBtwDisplayUpdates ) i=0; // roughly 5 seconds if delay(200) in wd stuff just below
   
   //wd stuff
@@ -276,7 +289,7 @@ void Service::analyzeCommand() {
             bContinue = false;
             break;
           }
-          m_lastStatusString = "ACK " + String(lS->getLastValue(), 3) ; 
+          m_lastStatusString = "ACK " + String(lS->getLastValue(), 3) ;//+ " / " + lS->getLastValueAsString() ; 
           bContinue = false;
         }
         else if (bSet) {

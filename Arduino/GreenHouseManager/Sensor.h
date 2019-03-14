@@ -27,6 +27,9 @@ class Sensor : public Device {
       }
       return m_lastVal;
     }
+    virtual String getLastValueAsString() { 
+      return String(getLastValue(),getPrecision());
+    } ;
     unsigned int getPrecision() const { return m_precision; } ;
     unsigned int setPrecision(unsigned int p) { m_precision = p; return getPrecision(); } ;
     bool getDisplay() const { return m_display; } ;

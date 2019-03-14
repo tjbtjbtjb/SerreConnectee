@@ -18,6 +18,9 @@ class LightSensor : public Sensor {
     LightSensor(String s,int pin) : Sensor(s), m_pin(pin) {} ;
     virtual ~LightSensor() {} ;
     float getValue() {return 100. * analogRead(m_pin) / 1023. / 0.74;} ;
+    String getLastValueAsString () { 
+      return String(getLastValue(),getPrecision()) + " %";
+    }
   private:
     int m_pin;
 };

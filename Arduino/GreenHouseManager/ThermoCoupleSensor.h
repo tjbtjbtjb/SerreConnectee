@@ -24,6 +24,9 @@ class ThermoCoupleSensor : public Sensor {
       } ;
     virtual ~ThermoCoupleSensor() {} ;
     float getValue() {return mp_max->readThermocoupleTemperature(); } ;
+    String getLastValueAsString() {
+      return String(getLastValue(),getPrecision()) + " Celsius";
+    }
   private:
     int m_pin;
     Adafruit_MAX31856 *mp_max;

@@ -20,6 +20,9 @@ class AirHumiditySensor : public Sensor {
     AirHumiditySensor(String s,TemperatureSensor *t):Sensor(s) { m_pTemp = t; }; 
     virtual ~AirHumiditySensor() {} ;
     float getValue() {return m_pTemp->getDht()->readHumidity(); } ;
+    String getLastValueAsString() {
+      return String(getLastValue(),getPrecision()) + " %";
+    }
   private:
     TemperatureSensor *m_pTemp;
 };
