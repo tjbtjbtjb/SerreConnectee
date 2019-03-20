@@ -1,10 +1,10 @@
 
 /**
- * @file      Service.cpp
- * @Author    Tristan Beau ( tristan.beau@univ-paris-diderot.fr )
- * @date      November, 2017
- * @RevDate   February, 2019
- * @brief     Class implementation for Green House services
+ * @file         Service.cpp
+ * @Author       Tristan Beau ( tristan.beau@univ-paris-diderot.fr )
+ * @date         November, 2017
+ * @LastRevDate  March, 2019
+ * @brief        Class implementation for Green House services
  * 
  * Detailed description
  * 
@@ -17,7 +17,6 @@
 // --- init of members -------------------------------------------
 void (*Service::softReset)(void)        = 0;  // function pointer to NULL address
 Service* Service::sm_instance           = 0;  // instance init on demand
-
 const int Service::sm_maxStringLength   = 63; 
 
 // --- Creator ------------------------------------------------------------
@@ -38,20 +37,8 @@ Service::Service(int wd_pin) {
   delay(5);
   
   //LCD init 
-  m_LCD.CleanAll(WHITE);    //Erase all
-  delay(250);            //Delay for 1s.
-  //logo USPC
-  //LCD.WorkingModeConf(ON, ON, WM_BitmapMode); // for an image
-  //LCD.DrawScreenAreaAt(&bmlogo_uspc_big, 0 , 0);
-  //delay(2000);
-  //Setting text mode for LCD, add a title.
-  m_LCD.WorkingModeConf(OFF, ON, WM_CharMode);  // Logo OFF, ScreenLight ON
-  m_LCD.CleanAll(WHITE);    //Erase all
-  m_LCD.CharGotoXY(0, 0);      //Set the start coordinate.
-  m_LCD.FontModeConf(Font_6x12, FM_MNL_AAA, WHITE_BAC);
-  //m_LCD.print("  ==> Serre USPC <==");m_LCD.print(HFILL_LINE);
-  m_LCD.print(" \\(^-^)/  Serre USPC" HFILL_LINE); // see e.g. http://1lineart.kulaone.com/#/
-  m_LCD.FontModeConf(Font_6x8, FM_MNL_AAA, BLACK_BAC); // manual newline
+  initLCD();
+  delay(200);
   
   // About WD
   wdt_enable(WDTO_4S);
@@ -67,6 +54,18 @@ Service::Service(int wd_pin) {
   m_actuatorArray = new Actuator* [sm_maxActuatorCnt];
 }
 
+void Service::initLCD() {
+//LCD init 
+  m_LCD.CleanAll(WHITE);    //Erase all
+  m_LCD.WorkingModeConf(OFF, ON, WM_CharMode);  // Logo OFF, ScreenLight ON
+  m_LCD.CleanAll(WHITE);    //Erase all
+  m_LCD.CharGotoXY(0, 0);      //Set the start coordinate.
+  m_LCD.FontModeConf(Font_6x12, FM_MNL_AAA, WHITE_BAC);
+  //m_LCD.print("  ==> Serre USPC <==");m_LCD.print(HFILL_LINE);
+  m_LCD.print(" \\(^-^)/  Serre USPC" HFILL_LINE); // see e.g. http://1lineart.kulaone.com/#/
+  m_LCD.FontModeConf(Font_6x8, FM_MNL_AAA, BLACK_BAC); // manual newline  
+}
+
 // --- getInstance() -------------------------------------------------------
 Service* Service::getInstance(int wd_pin) {
   if ( ! sm_instance ) {
@@ -77,7 +76,7 @@ Service* Service::getInstance(int wd_pin) {
 
 // --- doLoop() ------------------------------------------------------------
 void Service::doLoop() {
-  static int i=0;
+  static int i=0,j=0;
   int k,x;
   if (m_stringComplete) {
     analyzeCommand();
@@ -94,8 +93,8 @@ void Service::doLoop() {
       String vs = getSensor(k)->getLastValueAsString();
       // display on LCD screen
       if ( getSensor(k)->getDisplay() == true && x<5 ) { // (only 5 lines available)
-          m_LCD.print(getSensor(k)->getID());m_LCD.print(" : " HFILL_LINE);
-          m_LCD.CharGotoXY(60,(21+8*x++)%60); // align value display
+          m_LCD.print(getSensor(k)->getID());m_LCD.print(": " HFILL_LINE);
+          m_LCD.CharGotoXY(55,(21+8*x++)%60); // align value display
           m_LCD.print(vs);m_LCD.print(HFILL_LINE);
       }
     }
@@ -114,6 +113,11 @@ void Service::doLoop() {
   }
 
   if ( i++ > sm_loopsBtwDisplayUpdates ) i=0; // roughly 5 seconds if delay(200) in wd stuff just below
+
+  if ( j++ > sm_loopsBtwLCDClean) {
+    initLCD();
+    j=0;
+  }
   
   //wd stuff
   delay(sm_delayDeepLoop);
@@ -289,7 +293,7 @@ void Service::analyzeCommand() {
             bContinue = false;
             break;
           }
-          m_lastStatusString = "ACK " + String(lS->getLastValue(), 3) ;//+ " / " + lS->getLastValueAsString() ; 
+          m_lastStatusString = "ACK " + String(lS->getLastValue(), 3) ; //+ " / " + lS->getLastValueAsString() ; 
           bContinue = false;
         }
         else if (bSet) {

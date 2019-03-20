@@ -3,14 +3,16 @@
  * @file      GreenHouseManager.h
  * @Author    Tristan Beau ( tristan.beau@univ-paris-diderot.fr )
  * @date      November, 2017
- * @last      Feb, 2019
+ * @lastRev   March, 2019
  * @brief     Main source for the Green House management code
  * 
  * Detailed description
  * 
  * 
  */
-  
+
+#define SOFTWARE_VERSION 190320
+
 #include "Service.h"
 
 #include "LiveTimeInfo.h"
@@ -39,11 +41,11 @@ const int Service::sm_maxActuatorCnt    = 16;
 const unsigned long Sensor::sm_maxTime = 6000 ; // in milliseconds
 const unsigned long Service::sm_delayDeepLoop = 200; 
 const int Service::sm_loopsBtwDisplayUpdates = 20; 
+const int Service::sm_loopsBtwLCDClean = 5000;
+
 uint8_t I2C_LCD_ADDRESS = 0x51;  //Device address setting, default: 0x51
 
 Service          *pSvc;
-
-#define SOFTWARE_VERSION 190312
 
 #define A_TEST 0
 #define A_GREEN 1
@@ -54,7 +56,7 @@ Service          *pSvc;
 #if MY_ARDUINO == A_TEST 
 // Live time
 LiveTimeInfo           lLiveTimeInfo("LIVETIME");
-DummySensor            lDummySensor("DUMMY");
+DummySensor            lDummySensor("DUMMY",3.14);
 DigitalSensor          lBit23("BIT23",23);
 
 #elif MY_ARDUINO == A_GREEN // Green house arduino -----------------------------------
