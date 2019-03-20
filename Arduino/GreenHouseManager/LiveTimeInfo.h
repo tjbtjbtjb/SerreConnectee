@@ -2,6 +2,7 @@
    @file      LiveTimeInfo.h
    @Author    Tristan Beau ( tristan.beau@univ-paris-diderot.fr )
    @date      February, 2019
+   @RevDate   March, 2019
    @brief     Live Time Info pseudo sensor, inderectly used for the watch dog approach
 
    Detailed description
@@ -27,8 +28,11 @@ class LiveTimeInfo : public Sensor {
       d=r/sm_day;  r=r%sm_day;
       h=r/sm_hour; r=r%sm_hour;
       m=r/sm_min;  s=r%sm_min;
-      return String(d) + "d" + String(h) +"h" + String(m) + "m" + String(s) + "s";
-    }
+      return                       String(d)+String("d")+
+             String((h<10)?"0":"")+String(h)+String("h")+
+             String((m<10)?"0":"")+String(m)+String("m")+
+             String((s<10)?"0":"")+String(s)+String("s") ;
+    };
   private:
     static const unsigned long sm_min = 60;
     static const unsigned long sm_hour = 3600;

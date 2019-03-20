@@ -43,6 +43,8 @@ class Service {                             // nota : this is a singleton class
     int               getActuatorCnt() const ;
     Actuator*         getActuator(int) const; 
     Actuator*         getActuator(String)const; //retrieve it by string name
+
+    void              initLCD();
     
   private:
     String            m_inputString ;       // a string to hold incoming data
@@ -65,6 +67,7 @@ class Service {                             // nota : this is a singleton class
 
     static const unsigned long     sm_delayDeepLoop; // delay in milliseconds in the main deep loop (related to wd reset)
     static const int  sm_loopsBtwDisplayUpdates; // nb of loop between update of sensors on lcd display
+    static const int  sm_loopsBtwLCDClean;
 
     I2C_LCD           m_LCD;
    
