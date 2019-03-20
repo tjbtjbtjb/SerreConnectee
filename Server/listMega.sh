@@ -7,14 +7,14 @@ for a in `\ls /dev/ttyACM*`
 do
   udevadm info --query property --name $a > $f
   vendor=`cat $f | grep ID_VENDOR_ID= | awk -F= '{print $2}' `
-  if [[ $vendor -eq 2341 ]]
+  if [ "$vendor" = "2341" ] || [ "$vendor" = "2a03" ]
   then
-    model=`cat $f  | grep ID_MODEL= | awk -F= '{print $2}' `
-    if [[ $model -eq 0042 ]]
+    model=`cat $f  | grep ID_MODEL_ID= | awk -F= '{print $2}' `
+    if [ "$model" = "0042" ]
     then
       sn=`cat $f | grep ID_SERIAL_SHORT= | awk -F= '{print $2}' `
       shortname=`grep $sn < $DBFILE | awk '{print $2}'`
-      if [[ $shortname != "" ]] 
+      if [ "$shortname" != "" ] 
       then
         echo $a:$shortname
       else

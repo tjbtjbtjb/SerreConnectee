@@ -3,9 +3,9 @@
 GO="/home/beau/Git/SerreConnectee/Server/sendCommand.sh arduino0"
 
 $GO set water 1
-sleep 4
+sleep 5
 $GO set water 0
-sleep 1
+sleep 2
 
 $GO get water 
 if [[ `$GO get water | cut -b1-5 ` != "ACK 0" ]]

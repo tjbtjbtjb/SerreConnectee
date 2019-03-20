@@ -1,3 +1,4 @@
 55737313631351C0C031 arduino0 # serre proto actuelle
 856353034333512102A2 arduino1 # arduino avec shield pour tests
 55737313631351C0B070 arduino2 # arduino avec carte serre pour tests, fonctionnement dans le bac externe
+55635303738351C02220 arduino3 # arduino nu pour tests, type arduino original
