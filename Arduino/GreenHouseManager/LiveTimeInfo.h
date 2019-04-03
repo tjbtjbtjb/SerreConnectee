@@ -25,18 +25,19 @@ class LiveTimeInfo : public Sensor {
     String getLastValueAsString() {
       unsigned int d,h,m,s;
       unsigned long r=getLastValue();
-      d=r/sm_day;  r=r%sm_day;
-      h=r/sm_hour; r=r%sm_hour;
-      m=r/sm_min;  s=r%sm_min;
-      return                       String(d)+String("d")+
-             String((h<10)?"0":"")+String(h)+String("h")+
-             String((m<10)?"0":"")+String(m)+String("m")+
-             String((s<10)?"0":"")+String(s)+String("s") ;
+
+#define DIVMOD(X) X=r/sm_ ## X; r=r % sm_ ## X
+      DIVMOD(d); DIVMOD(h); DIVMOD(m); s=r;   // iterative computation of d/h/m/s from nb of seconds
+
+#define toS(X) String(X) + String( #X ) 
+#define toS0(X) String( (X<10) ? "0" : "") + toS(X)  /* with leading 0 if needed */
+
+      return toS(d) + toS0 (h) + toS0(m) + toS0(s) ;  // formating the output
     };
   private:
-    static const unsigned long sm_min = 60;
-    static const unsigned long sm_hour = 3600;
-    static const unsigned long sm_day = 86400;
+    static const unsigned long sm_m = 60;    // minutes
+    static const unsigned long sm_h = 3600;  // hours
+    static const unsigned long sm_d = 86400; // day
 };
 
 #endif
