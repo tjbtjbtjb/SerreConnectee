@@ -10,6 +10,7 @@ test $# -eq 1 && INTERVAL=$1
 
 declare -A Descr
 Descr[LIVETIME]=status/live_time
+Descr[VERSION]=status/soft_version
 Descr[LUX]=sensors/ambiant_lux
 Descr[OUTTEMP]=sensors/out_air_temp
 Descr[OUTAIRHR]=sensors/out_air_hr
@@ -27,7 +28,7 @@ Descr[WATER]=switches/switch_water
 Descr[MIST]=switches/switch_mist
 Descr[LIGHT]=switches/switch_light
 Descr[HEAT]=switches/switch_heat
-Descr[FLOW]=switches/water_flow
+Descr[FLOW]=sensors/water_flow
 #
 # === LOOP ==========================================================================-=
 #
