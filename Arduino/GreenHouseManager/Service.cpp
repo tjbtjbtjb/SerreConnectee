@@ -293,7 +293,7 @@ void Service::analyzeCommand() {
             bContinue = false;
             break;
           }
-          m_lastStatusString = "ACK " + String(lS->getLastValue(), 3) ; //+ " / " + lS->getLastValueAsString() ; 
+          m_lastStatusString = "ACK " + String(lS->getLastValue(), 3);// + " [" + lS->getLastValueAsString() + "]" ; 
           bContinue = false;
         }
         else if (bSet) {
