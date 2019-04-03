@@ -11,7 +11,7 @@
  * 
  */
 
-#define SOFTWARE_VERSION 190320
+#define SOFTWARE_VERSION 190321
 
 #include "Service.h"
 
@@ -28,10 +28,11 @@
 //#include "TemperatureCO2Sensor.h"
 #include "CO2PulseSensor.h"
 #include "ThermoCoupleSensor.h"
+#include "WaterFlowSensor.h"
 
 //#include "DummyActuator.h"
 #include "DigitalActuator.h"
-#include "MotorActuator.h"
+//#include "MotorActuator.h"
 //#include "Buzzer.h"
 
 // --- Static constant definitions
@@ -74,6 +75,7 @@ DigitalSensor        lStopStepperSensor("STOPSTEP",9);
 VoltageSensor        lThermalFlux("FLUX",A0,1./400./12.1e-6,"W/m2");   // in W / m2 ? 
 ThermoCoupleSensor   lThermoCouple("THERMO",10);
 CO2PulseSensor       lCO2Sensor("CO2PPM",2);
+WaterFlowSensor      lWaterFlowSensor("FLOW",3); 
 
 // Dual Digital Actuator & Sensor 
 DigitalSensor        lAutoMode("AUTO",23); // ! AUTO : Reserved name, see in service
@@ -121,6 +123,7 @@ void setup() {
   pSvc->addSensor(&lThermalFlux);
   pSvc->addSensor(&lThermoCouple);
   pSvc->addSensor(&lCO2Sensor);
+  pSvc->addSensor(&lWaterFlowSensor);
 
   pSvc->addSensor(&lAutoMode);
   
