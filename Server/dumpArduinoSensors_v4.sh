@@ -27,7 +27,7 @@ Descr[WATER]=switches/switch_water
 Descr[MIST]=switches/switch_mist
 Descr[LIGHT]=switches/switch_light
 Descr[HEAT]=switches/switch_heat
-
+Descr[FLOW]=switches/water_flow
 #
 # === LOOP ==========================================================================-=
 #

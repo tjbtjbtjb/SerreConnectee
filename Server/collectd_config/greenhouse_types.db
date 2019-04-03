@@ -16,3 +16,4 @@ switch_water       value:GAUGE:0:1
 switch_mist        value:GAUGE:0:1
 switch_light       value:GAUGE:0:1
 switch_heat        value:GAUGE:0:1
+water_flow         value:GAUGE:0:U
