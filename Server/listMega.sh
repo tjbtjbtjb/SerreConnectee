@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DBFILE=/home/beau/Git/SerreConnectee/Server/arduino_db.txt
+DBFILE=/home/greenhouse/Git/SerreConnectee/Server/arduino_db.txt
 f=`mktemp`
 
 for a in `\ls /dev/ttyACM*`
