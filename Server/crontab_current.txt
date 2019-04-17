@@ -1,0 +1,4 @@
+31 08 * * * /home/greenhouse/Git/SerreConnectee/Server/sendCommand.sh arduino0 set light 1
+31 18 * * * /home/greenhouse/Git/SerreConnectee/Server/sendCommand.sh arduino0 set light 0
+#42 9,15 * * 1-5 /home/greenhouse/Git/SerreConnectee/Server/watering.sh arduino0
+*/5 * * * * /home/greenhouse/Git/SerreConnectee/Server/heat.sh arduino0
