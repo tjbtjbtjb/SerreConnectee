@@ -20,7 +20,7 @@ class ThermoCoupleSensor : public Sensor {
     ThermoCoupleSensor(String s,int pin) : Sensor(s), m_pin(pin) {
         mp_max = new Adafruit_MAX31856(pin,pin+1,pin+2,pin+3);
         mp_max->begin();
-        mp_max->setThermocoupleType(MAX31856_TCTYPE_K);
+        mp_max->setThermocoupleType(MAX31856_TCTYPE_T);
       } ;
     virtual ~ThermoCoupleSensor() {} ;
     float getValue() {return mp_max->readThermocoupleTemperature(); } ;
