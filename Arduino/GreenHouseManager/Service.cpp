@@ -41,7 +41,7 @@ Service::Service(int wd_pin) {
   delay(200);
   
   // About WD
-  wdt_enable(WDTO_4S);
+  wdt_enable(WDTO_8S);  // 4S ? 
   m_pinWdLed = wd_pin;
   pinMode(m_pinWdLed,OUTPUT);
   m_WdLedValue = LOW;
