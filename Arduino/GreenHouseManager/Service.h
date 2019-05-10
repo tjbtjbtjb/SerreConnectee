@@ -18,6 +18,9 @@
 
 #include "Sensor.h"
 #include "Actuator.h"
+#include "DigitalActuator.h"
+#include "Alarm.h"
+
 #include <I2C_LCD.h>
 #define HFILL_LINE "                                \n"
 
@@ -44,6 +47,14 @@ class Service {                             // nota : this is a singleton class
     Actuator*         getActuator(int) const; 
     Actuator*         getActuator(String)const; //retrieve it by string name
 
+    void              addAlarm(Alarm *) ; 
+    int               getAlarmCnt() const ;
+    Alarm*            getAlarm(int) const; 
+    Alarm*            getAlarm(String)const; //retrieve it by string name
+    unsigned long     allAlarmsStatus() const;
+
+    void              setMainAlarm(DigitalActuator *a) { mp_mainAlarm = a; };
+
     void              initLCD();
     
   private:
@@ -61,6 +72,11 @@ class Service {                             // nota : this is a singleton class
     Actuator**        m_actuatorArray;        // array of pointer of actuators
     int               m_actuatorCnt;          // nb of sensors  
     const static int  sm_maxActuatorCnt;      // max nb of sensors
+
+    Alarm**           m_alarmArray;         // array of pointer of alarms
+    int               m_alarmCnt;           // nb of alarms
+    const static int  sm_maxAlarmCnt;       // max nb of alarms
+    DigitalActuator*  mp_mainAlarm; 
 
     int               m_pinWdLed;
     int               m_WdLedValue;

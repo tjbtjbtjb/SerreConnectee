@@ -52,6 +52,9 @@ Service::Service(int wd_pin) {
   m_sensorArray = new Sensor* [sm_maxSensorCnt];
   m_actuatorCnt = 0;
   m_actuatorArray = new Actuator* [sm_maxActuatorCnt];
+  m_alarmCnt = 0;
+  m_alarmArray = new Alarm* [sm_maxAlarmCnt];
+  mp_mainAlarm = 0;
 }
 
 void Service::initLCD() {
@@ -99,7 +102,14 @@ void Service::doLoop() {
       }
     }
     for (k=x;k<5;k++) m_LCD.print(HFILL_LINE); // to blank screen after last displayed sensor info
-
+    
+    if ( mp_mainAlarm ) mp_mainAlarm->setValue( (allAlarmsStatus())?1:0 );
+    
+    //Serial.println(allAlarmsStatus());
+    //for (k=0; k<getAlarmCnt(); k++) {
+    //  Serial.print("Alarm #");Serial.print(k);Serial.print(" -> ");Serial.println(getAlarm(k)->getLastValue());
+    //}
+         
     // if in manual mode, force the state of the actuator to the sensor value. Assume sensor name = actuator name
     if ( ! getSensor("AUTO")->getLastValue() ) {
       for (k=0;k<m_actuatorCnt;k++) {
@@ -235,18 +245,18 @@ void Service::addActuator(Actuator *s) {
     abort();
 }
 
-// --- Service::getSensorCnt ------------------------------------------------
+// --- Service::getActuatorCnt ------------------------------------------------
 int Service::getActuatorCnt() const {
   return m_actuatorCnt;
 }
 
-// --- Service::getSensor(int) ----------------------------------------------
+// --- Service::getActuator(int) ----------------------------------------------
 Actuator* Service::getActuator(int i) const {
   if ( i >= getActuatorCnt() ) return NULL;
   return m_actuatorArray[i];
 }
 
-// --- Service::getSensor(String) -------------------------------------------
+// --- Service::getActuator(String) -------------------------------------------
 Actuator* Service::getActuator(String s) const {
   int i=0;
   while (i<getActuatorCnt()){
@@ -255,6 +265,49 @@ Actuator* Service::getActuator(String s) const {
   }
   return getActuator(i);
 }
+
+// --- Service::addAlarm ---------------------------------------------------
+void Service::addAlarm(Alarm *s) {
+  if (m_alarmCnt < sm_maxAlarmCnt) {
+    m_alarmArray[m_alarmCnt++] = s;
+    addSensor(s);
+  }
+   else 
+    abort();
+}
+
+// --- Service::getAlarmCnt ------------------------------------------------
+int Service::getAlarmCnt() const {
+  return m_alarmCnt;
+}
+
+// --- Service::getAlarm(int) ----------------------------------------------
+Alarm* Service::getAlarm(int i) const {
+  if ( i >= getAlarmCnt() ) return NULL;
+  return m_alarmArray[i];
+}
+
+// --- Service::getAlarm(String) -------------------------------------------
+Alarm* Service::getAlarm(String s) const {
+  int i=0;
+  while (i<getAlarmCnt()){
+    if ( s == m_alarmArray[i]->getID() ) break;
+    i++;
+  }
+  return getAlarm(i);
+}
+
+// --- compute alarm status ------------------------------------------------
+unsigned long Service::allAlarmsStatus() const {
+  int i;
+  unsigned long s = 0;
+  for (i=0;i<getAlarmCnt();i++) 
+    if ( getAlarm(i)->getLastValue() ) 
+      s = s | (0x1<<i);
+  
+  return s;
+}
+
 // --- Service::analyzeCommand() --------------------------------------------
 void Service::analyzeCommand() {
   char *word;

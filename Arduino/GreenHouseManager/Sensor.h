@@ -16,7 +16,7 @@
 
 class Sensor : public Device {
   public:
-    Sensor(String s,bool disp=false, unsigned int prec=0) : Device(s),m_lastTime(0),m_lastVal(-1.) {
+    Sensor(String s,bool disp=false, unsigned int prec=0) : Device(s),m_lastTime(2*sm_maxTime),m_lastVal(-1.) {
       setPrecision(prec); setDisplay(disp);   // by default no display on screen
     };
     float getLastValue() { 
