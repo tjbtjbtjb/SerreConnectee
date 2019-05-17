@@ -11,7 +11,7 @@
  * 
  */
 
-#define SOFTWARE_VERSION 190507
+#define SOFTWARE_VERSION 190517
 
 #include "Service.h"
 
@@ -35,10 +35,14 @@
 //#include "MotorActuator.h"
 //#include "Buzzer.h"
 
+#include "ThresholdAlarm.h"
+
 // --- Static constant definitions
 
+const unsigned long Service::sm_softVersion       = SOFTWARE_VERSION;
 const int Service::sm_maxSensorCnt      = 32;
 const int Service::sm_maxActuatorCnt    = 16;
+const int Service::sm_maxAlarmCnt       = 8;
 const unsigned long Sensor::sm_maxTime = 6000 ; // in milliseconds
 const unsigned long Service::sm_delayDeepLoop = 200; 
 const int Service::sm_loopsBtwDisplayUpdates = 20; 
@@ -100,17 +104,31 @@ DigitalSensor        lLedHeat("HEAT",25,1);
 
 //MotorActuator        lMotor("MOTOR",0x0f);
 
+ThresholdAlarm       lAlarmMaxGndTmp("MAXTMP",&lThermoCouple,30,ThresholdAlarm::isMax,&lHeat,0);  // Above 30 degrees, set heat to 0 periodically
+ThresholdAlarm       lAlarmMinGndTmp("MINTMP",&lThermoCouple,12,ThresholdAlarm::isMin,&lHeat,1);  // Below 12 degrees, set heat to 1 periodically
+ThresholdAlarm       lAlarmMaxGndHr("MAXHR",  &lGroundHumiditySensor, 95, ThresholdAlarm::isMax,&lFan,1); // Above 95%, set fan to 1 periodically
+ThresholdAlarm       lAlarmMinGndHr("MINHR",  &lGroundHumiditySensor, 0.5, ThresholdAlarm::isMin); // Below 0.5%, do nothing.
 #endif
 
 void setup() {
+  
   pSvc = Service::getInstance(22); // 22, the pin for the WD LED. If no arg, flashes the internal led.
-
+  
 #if MY_ARDUINO == A_TEST
   pSvc->addSensor(&lLiveTimeInfo);
   pSvc->addSensor(&lDummySensor);
   pSvc->addSensor(&lBit23);
   
 #elif MY_ARDUINO == A_GREEN
+
+  //Adding alarms
+  pSvc->setMainAlarm(&lAlarm);
+  
+  pSvc->addAlarm(&lAlarmMaxGndTmp);
+  pSvc->addAlarm(&lAlarmMaxGndHr);
+  pSvc->addAlarm(&lAlarmMinGndHr);
+
+  //Adding sensors / actuators
   pSvc->addSensor(&lLiveTimeInfo);
   pSvc->addSensor(&lVersionSensor); 
   pSvc->addSensor(&lLightSensor);
