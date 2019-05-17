@@ -22,7 +22,7 @@ class ThresholdAlarm : public Alarm {
       isMin,
       isMax
     };
-    ThresholdAlarm(String s, Sensor *sens, float thr, ThresholdAlarm::Type t) : Alarm(s), mp_Sensor(sens) { setThreshold(thr); setType(t); } ;
+    ThresholdAlarm(String s, Sensor *sens, float thr, ThresholdAlarm::Type t, Actuator *a=NULL,int v=0) : Alarm(s,a,v), mp_Sensor(sens) { setThreshold(thr); setType(t); } ;
     void setThreshold(float thr) { m_Threshold = thr; };
     void setType(ThresholdAlarm::Type t) { m_Type = t;};
     float getThreshold() { return m_Threshold; };

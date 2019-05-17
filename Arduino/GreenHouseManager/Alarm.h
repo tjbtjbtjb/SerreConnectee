@@ -12,16 +12,19 @@
 #ifndef _ALARM_H_
 #define _ALARM_H_
 
+#include "Actuator.h"
 #include "Sensor.h"
 
 class Alarm : public Sensor {
   public:
-    Alarm(String s) : Sensor(s) { setPrecision(0); } ;  
+    Alarm(String s,Actuator *a=NULL,int v=0) : Sensor(s),mp_Actuator(a),m_AlarmActuatorValue(v) { setPrecision(0); } ;  
     virtual ~Alarm() {} ;
   protected:
     float getValue() { 
       if ( getStatus() ) {
-        setDisplay(true); return 1.;
+        setDisplay(true);
+        if (mp_Actuator != NULL) mp_Actuator->setValue(m_AlarmActuatorValue);
+        return 1.;
       }
       else {
         setDisplay(false);
@@ -29,6 +32,9 @@ class Alarm : public Sensor {
       }
     }
     virtual bool getStatus() = 0;
+  private: 
+    Actuator* mp_Actuator;
+    int       m_AlarmActuatorValue;
 };
 
 #endif

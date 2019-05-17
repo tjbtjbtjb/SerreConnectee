@@ -3,7 +3,7 @@
  * @file         Service.cpp
  * @Author       Tristan Beau ( tristan.beau@univ-paris-diderot.fr )
  * @date         November, 2017
- * @LastRevDate  March, 2019
+ * @LastRevDate  May, 2019
  * @brief        Class implementation for Green House services
  * 
  * Detailed description
@@ -11,8 +11,15 @@
  * Nota : here we define the maximum managed sensors.
  * 
  */
-
+ 
 #include "Service.h"
+
+#include <EEPROM.h>
+struct NameObject {
+  byte h1,h2;
+  char string[12];
+};
+
 
 // --- init of members -------------------------------------------
 void (*Service::softReset)(void)        = 0;  // function pointer to NULL address
@@ -35,7 +42,14 @@ Service::Service(int wd_pin) {
   m_lastStatusString = "ACK INIT OK";
   Serial.println(m_lastStatusString);
   delay(5);
-  
+
+  // retreive in EPROM the board name...
+  NameObject n;
+  EEPROM.get(128,n);
+  if ( strlen(n.string) > 0) n.string[strlen(n.string)-1]='\0';
+  m_stringInitLCD = String((n.h1 == 75 && n.h2 == 13)?n.string:"GreenHouse") + String(" v") + String(sm_softVersion); 
+  //Service::m_stringInitLCD = "Arduino0 v" xstr(SOFTWARE_VERSION) ; //" \\(^-^)/  Serre USPC" ; // see e.g. http://1lineart.kulaone.com/#/
+
   //LCD init 
   initLCD();
   delay(200);
@@ -65,12 +79,13 @@ void Service::initLCD() {
   m_LCD.CharGotoXY(0, 0);      //Set the start coordinate.
   m_LCD.FontModeConf(Font_6x12, FM_MNL_AAA, WHITE_BAC);
   //m_LCD.print("  ==> Serre USPC <==");m_LCD.print(HFILL_LINE);
-  m_LCD.print(" \\(^-^)/  Serre USPC" HFILL_LINE); // see e.g. http://1lineart.kulaone.com/#/
+  Serial.println(m_stringInitLCD);
+  m_LCD.print(m_stringInitLCD + HFILL_LINE);
   m_LCD.FontModeConf(Font_6x8, FM_MNL_AAA, BLACK_BAC); // manual newline  
 }
 
 // --- getInstance() -------------------------------------------------------
-Service* Service::getInstance(int wd_pin) {
+Service* Service::getInstance(int wd_pin)  {
   if ( ! sm_instance ) {
     sm_instance = new Service(wd_pin); 
   }

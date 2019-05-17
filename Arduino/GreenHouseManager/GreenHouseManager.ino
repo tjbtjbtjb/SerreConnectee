@@ -11,8 +11,7 @@
  * 
  */
 
-//truc
-#define SOFTWARE_VERSION 190510
+#define SOFTWARE_VERSION 190507
 
 #include "Service.h"
 
@@ -36,13 +35,10 @@
 //#include "MotorActuator.h"
 //#include "Buzzer.h"
 
-#include "ThresholdAlarm.h"
-
 // --- Static constant definitions
 
 const int Service::sm_maxSensorCnt      = 32;
 const int Service::sm_maxActuatorCnt    = 16;
-const int Service::sm_maxAlarmCnt       = 8;
 const unsigned long Sensor::sm_maxTime = 6000 ; // in milliseconds
 const unsigned long Service::sm_delayDeepLoop = 200; 
 const int Service::sm_loopsBtwDisplayUpdates = 20; 
@@ -104,9 +100,6 @@ DigitalSensor        lLedHeat("HEAT",25,1);
 
 //MotorActuator        lMotor("MOTOR",0x0f);
 
-ThresholdAlarm       lAlarmMaxGndTmp("MAXTMP",&lThermoCouple,-1.23,ThresholdAlarm::isMax);
-ThresholdAlarm       lAlarmMaxGndHr("MAXHR",  &lGroundHumiditySensor, 90, ThresholdAlarm::isMax);
-ThresholdAlarm       lAlarmMinGndHr("MINHR",  &lGroundHumiditySensor, 50, ThresholdAlarm::isMin);
 #endif
 
 void setup() {
@@ -118,15 +111,6 @@ void setup() {
   pSvc->addSensor(&lBit23);
   
 #elif MY_ARDUINO == A_GREEN
-
-  //Adding alarms
-  pSvc->setMainAlarm(&lAlarm);
-  
-  pSvc->addAlarm(&lAlarmMaxGndTmp);
-  pSvc->addAlarm(&lAlarmMaxGndHr);
-  pSvc->addAlarm(&lAlarmMinGndHr);
-
-  //Adding sensors / actuators
   pSvc->addSensor(&lLiveTimeInfo);
   pSvc->addSensor(&lVersionSensor); 
   pSvc->addSensor(&lLightSensor);
