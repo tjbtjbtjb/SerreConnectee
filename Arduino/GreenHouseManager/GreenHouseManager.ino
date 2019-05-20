@@ -11,7 +11,7 @@
  * 
  */
 
-#define SOFTWARE_VERSION 190517
+#define SOFTWARE_VERSION 190520
 
 #include "Service.h"
 
@@ -104,8 +104,8 @@ DigitalSensor        lLedHeat("HEAT",25,1);
 
 //MotorActuator        lMotor("MOTOR",0x0f);
 
-ThresholdAlarm       lAlarmMaxGndTmp("MAXTMP",&lThermoCouple,30,ThresholdAlarm::isMax,&lHeat,0);  // Above 30 degrees, set heat to 0 periodically
-ThresholdAlarm       lAlarmMinGndTmp("MINTMP",&lThermoCouple,12,ThresholdAlarm::isMin,&lHeat,1);  // Below 12 degrees, set heat to 1 periodically
+ThresholdAlarm       lAlarmMaxGndTmp("MAXTMP",&lThermoCouple,26,ThresholdAlarm::isMax,&lHeat,0);  // Above 26 degrees, set heat to 0 periodically
+ThresholdAlarm       lAlarmMinGndTmp("MINTMP",&lThermoCouple,25,ThresholdAlarm::isMin,&lHeat,1);  // Below 25 degrees, set heat to 1 periodically
 ThresholdAlarm       lAlarmMaxGndHr("MAXHR",  &lGroundHumiditySensor, 95, ThresholdAlarm::isMax,&lFan,1); // Above 95%, set fan to 1 periodically
 ThresholdAlarm       lAlarmMinGndHr("MINHR",  &lGroundHumiditySensor, 0.5, ThresholdAlarm::isMin); // Below 0.5%, do nothing.
 #endif
@@ -125,6 +125,7 @@ void setup() {
   pSvc->setMainAlarm(&lAlarm);
   
   pSvc->addAlarm(&lAlarmMaxGndTmp);
+  pSvc->addAlarm(&lAlarmMinGndTmp);
   pSvc->addAlarm(&lAlarmMaxGndHr);
   pSvc->addAlarm(&lAlarmMinGndHr);
 

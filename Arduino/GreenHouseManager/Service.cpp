@@ -79,7 +79,7 @@ void Service::initLCD() {
   m_LCD.CharGotoXY(0, 0);      //Set the start coordinate.
   m_LCD.FontModeConf(Font_6x12, FM_MNL_AAA, WHITE_BAC);
   //m_LCD.print("  ==> Serre USPC <==");m_LCD.print(HFILL_LINE);
-  Serial.println(m_stringInitLCD);
+  //Serial.println(m_stringInitLCD);
   m_LCD.print(m_stringInitLCD + HFILL_LINE);
   m_LCD.FontModeConf(Font_6x8, FM_MNL_AAA, BLACK_BAC); // manual newline  
 }
