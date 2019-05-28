@@ -11,7 +11,7 @@
  * 
  */
 
-#define SOFTWARE_VERSION 190520
+#define SOFTWARE_VERSION 190528
 
 #include "Service.h"
 
@@ -104,10 +104,11 @@ DigitalSensor        lLedHeat("HEAT",25,1);
 
 //MotorActuator        lMotor("MOTOR",0x0f);
 
-ThresholdAlarm       lAlarmMaxGndTmp("MAXTMP",&lThermoCouple,26,ThresholdAlarm::isMax,&lHeat,0);  // Above 26 degrees, set heat to 0 periodically
-ThresholdAlarm       lAlarmMinGndTmp("MINTMP",&lThermoCouple,25,ThresholdAlarm::isMin,&lHeat,1);  // Below 25 degrees, set heat to 1 periodically
-ThresholdAlarm       lAlarmMaxGndHr("MAXHR",  &lGroundHumiditySensor, 95, ThresholdAlarm::isMax,&lFan,1); // Above 95%, set fan to 1 periodically
-ThresholdAlarm       lAlarmMinGndHr("MINHR",  &lGroundHumiditySensor, 0.5, ThresholdAlarm::isMin); // Below 0.5%, do nothing.
+ThresholdAlarm       lAlarmMaxGndTmp("MAXTMP",&lThermoCouple,31,ThresholdAlarm::isMax,&lHeat,0);  // Above 31 degrees, set heat to 0 periodically
+ThresholdAlarm       lAlarmMinGndTmp("MINTMP",&lThermoCouple,17,ThresholdAlarm::isMin,&lHeat,1);  // Below 17 degrees, set heat to 1 periodically
+//ThresholdAlarm       lAlarmMaxGndHr("MAXHR",  &lGroundHumiditySensor, 95, ThresholdAlarm::isMax,&lFan,1); // Above 95%, set fan to 1 periodically
+//ThresholdAlarm       lAlarmMinGndHr("MINHR",  &lGroundHumiditySensor, 0.5, ThresholdAlarm::isMin); // Below 0.5%, do nothing.
+//ThresholdAlarm       lAlarmMAxCo2("MAXCO2", &lCO2Sensor, 500, ThresholdAlarm::isMax,&lFan,1); // 
 #endif
 
 void setup() {
@@ -126,8 +127,8 @@ void setup() {
   
   pSvc->addAlarm(&lAlarmMaxGndTmp);
   pSvc->addAlarm(&lAlarmMinGndTmp);
-  pSvc->addAlarm(&lAlarmMaxGndHr);
-  pSvc->addAlarm(&lAlarmMinGndHr);
+  //pSvc->addAlarm(&lAlarmMaxGndHr);
+  //pSvc->addAlarm(&lAlarmMinGndHr);
 
   //Adding sensors / actuators
   pSvc->addSensor(&lLiveTimeInfo);
@@ -168,7 +169,7 @@ void setup() {
 
   //display default modification (Anne recommandation)
   lOutTemperatureSensor.setDisplay(false);
-  lGroundHumiditySensor.setDisplay(true); lGroundHumiditySensor.setPrecision(1); // change default value
+  lGroundHumiditySensor.setDisplay(false); lGroundHumiditySensor.setPrecision(1); // change default value
   lThermoCouple.setDisplay(true); lThermoCouple.setPrecision(1);
   lThermalFlux.setDisplay(true); lThermalFlux.setPrecision(1);
 
