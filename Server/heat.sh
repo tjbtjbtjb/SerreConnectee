@@ -7,8 +7,8 @@ GO="/home/greenhouse/Git/SerreConnectee/Server/sendCommand.sh $arduino "
 
 TGND=`$GO get thermo | awk '{print $2}'`
 
-TMAX=29.5
-TMIN=26.5
+TMAX=28.9
+TMIN=28.5
 
 if [ `echo $TGND '<' $TMIN | bc` -eq 1 ]
 then
@@ -19,6 +19,6 @@ elif [ `echo $TGND '>' $TMAX | bc` -eq 1 ]
 then
   echo "Heating off and fan on $arduino, currently $TGND "
   $GO set heat 0
-  $GO set fan 1
+  $GO set fan 0
 fi
 
