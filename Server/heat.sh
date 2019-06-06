@@ -3,22 +3,28 @@
 arduino=arduino0
 test $# -eq 1 && arduino=$1
 
-GO="/home/greenhouse/Git/SerreConnectee/Server/sendCommand.sh $arduino "
+ldir=`dirname $0`
+getval="$ldir/getValue.sh $arduino "
+setval="$ldir/setValue.sh $arduino "
 
-TGND=`$GO get thermo | awk '{print $2}'`
-
+TGND=`$getval thermo || echo err`
+HEAT=`$getval heat || echo err`
 TMAX=28.9
 TMIN=28.5
 
-if [ `echo $TGND '<' $TMIN | bc` -eq 1 ]
+if [ "$TGND" == "err" ] || [ "$HEAT" == "err" ]
+then 
+  echo "Incorrect values." >&2 
+  exit 10
+fi
+
+if [ `awk 'BEGIN {print ('$HEAT'==0)}'` -eq 1 ] && [ `awk 'BEGIN {print ('$TGND'<'$TMIN')}'` -eq 1 ]
 then
-  echo "Heating on and fan off $arduino, currently $TGND "
-  $GO set heat 1
-  $GO set fan 0
-elif [ `echo $TGND '>' $TMAX | bc` -eq 1 ]
+  echo "Heating on $arduino, currently $TGND "
+  $setval heat 1
+elif [ `awk 'BEGIN {print ('$HEAT'==1)}'` -eq 1 ] && [ `awk 'BEGIN {print ('$TGND'>'$TMAX')}'` -eq 1 ]
 then
-  echo "Heating off and fan on $arduino, currently $TGND "
-  $GO set heat 0
-  $GO set fan 0
+  echo "Heating off $arduino, currently $TGND "
+  $setval heat 0
 fi
 
