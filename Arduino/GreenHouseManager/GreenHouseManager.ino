@@ -11,7 +11,7 @@
  * 
  */
 
-#define SOFTWARE_VERSION 190528
+#define SOFTWARE_VERSION 190621
 
 #include "Service.h"
 
@@ -29,6 +29,7 @@
 #include "CO2PulseSensor.h"
 #include "ThermoCoupleSensor.h"
 #include "WaterFlowSensor.h"
+#include "CapacitiveSoilSensor.h"
 
 //#include "DummyActuator.h"
 #include "DigitalActuator.h"
@@ -74,7 +75,8 @@ TemperatureSensor    lIntTemperatureSensor("INTTEMP",A2);
 TemperatureSensor    lOutTemperatureSensor("OUTTEMP",A15); 
 AirHumiditySensor    lIntAirHumiditySensor("INTAIRHR",&lIntTemperatureSensor);
 AirHumiditySensor    lOutAirHumiditySensor("OUTAIRHR",&lOutTemperatureSensor);
-VoltageSensor        lGroundHumiditySensor("GNDHR",A1,100./5.,"%"); // try to give in %
+//VoltageSensor        lGroundHumiditySensor("GNDHR",A1,100./5.,"%"); // try to give in %
+CapacitiveSoilSensor lGroundHumiditySensor("GNDHR",A1,575,254); 
 DigitalSensor        lStopStepperSensor("STOPSTEP",9);
 VoltageSensor        lThermalFlux("FLUX",A0,1./400./12.1e-6,"W/m2");   // in W / m2 ? 
 ThermoCoupleSensor   lThermoCouple("THERMO",10);
@@ -113,7 +115,7 @@ ThresholdAlarm       lAlarmMinGndTmp("MINTMP",&lThermoCouple,17,ThresholdAlarm::
 
 void setup() {
   
-  pSvc = Service::getInstance(22); // 22, the pin for the WD LED. If no arg, flashes the internal led.
+  pSvc = Service::getInstance();//22); // 22, the pin for the WD LED. If no arg, flashes the internal led.
   
 #if MY_ARDUINO == A_TEST
   pSvc->addSensor(&lLiveTimeInfo);
@@ -169,7 +171,7 @@ void setup() {
 
   //display default modification (Anne recommandation)
   lOutTemperatureSensor.setDisplay(false);
-  lGroundHumiditySensor.setDisplay(false); lGroundHumiditySensor.setPrecision(1); // change default value
+  lGroundHumiditySensor.setDisplay(true); lGroundHumiditySensor.setPrecision(1); // change default value
   lThermoCouple.setDisplay(true); lThermoCouple.setPrecision(1);
   lThermalFlux.setDisplay(true); lThermalFlux.setPrecision(1);
 
