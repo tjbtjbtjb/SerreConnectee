@@ -133,8 +133,8 @@ void setup() {
   //pSvc->addAlarm(&lAlarmMinGndHr);
 
   //Adding sensors / actuators
-  pSvc->addSensor(&lLiveTimeInfo);
   pSvc->addSensor(&lVersionSensor); 
+  pSvc->addSensor(&lLiveTimeInfo);
   pSvc->addSensor(&lLightSensor);
   pSvc->addSensor(&lIntTemperatureSensor);
   pSvc->addSensor(&lOutTemperatureSensor);

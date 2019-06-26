@@ -118,16 +118,17 @@ void Service::doLoop() {
     }
     if(key=='A') { // display on LCD alarms
       m_LCD.CharGotoXY(0,13);
-      m_LCD.print("  Alarm status ");m_LCD.print(allAlarmsStatus());
+      m_LCD.print("  Alarm status ");m_LCD.print(allAlarmsStatus());m_LCD.print(HFILL_LINE);
       for (k=0; k<getAlarmCnt(); k++) {
-        m_LCD.print(getAlarm(k)->getID());m_LCD.print("[");m_LCD.print(k);m_LCD.print("]");m_LCD.print(" -> ");m_LCD.println(getAlarm(k)->getLastValue());
+        m_LCD.print(getAlarm(k)->getID());m_LCD.print("[");m_LCD.print(k);m_LCD.print("]");m_LCD.print(" -> ");m_LCD.print(getAlarm(k)->getLastValue());m_LCD.print(HFILL_LINE);
       }
+      for (x=k;x<5;x++) m_LCD.print(HFILL_LINE);
     }
     if(key=='B') { // display on LCD sensors; and clear keypad buffer
       m_LCD.CharGotoXY(0,13); 
-      for(k=m_alarmCnt;k<m_sensorCnt;k++) { // the first m_alarmCnt are pseudo sensors…
+      for(k=m_alarmCnt+1,x=0;k<m_sensorCnt && x<12;k++,x++) { // the first m_alarmCnt are pseudo sensors…
           m_LCD.print(getSensor(k)->getID());m_LCD.print("[");m_LCD.print(k-m_alarmCnt);m_LCD.print("] ");
-          if (k%2) m_LCD.print(HFILL_LINE); // impression 2 par ligne
+          if (x%2) m_LCD.print(HFILL_LINE); // impression 2 par ligne
       }
     }
     if( m_kindex>0 && (key=='C' || key=='D') ) { // either display the sensor (D) or clear it (C)
