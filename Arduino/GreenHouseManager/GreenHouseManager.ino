@@ -11,7 +11,7 @@
  * 
  */
 
-#define SOFTWARE_VERSION 190621
+#define SOFTWARE_VERSION 190626 
 
 #include "Service.h"
 

@@ -24,6 +24,10 @@
 #include <I2C_LCD.h>
 #define HFILL_LINE "                                \n"
 
+#include <Keypad.h> 
+
+// ---------------
+
 class Service {                             // nota : this is a singleton class
   private:
     static Service*   sm_instance;          // storage
@@ -90,8 +94,19 @@ class Service {                             // nota : this is a singleton class
     I2C_LCD           m_LCD;
 
     String            m_stringInitLCD ;
+
+    const byte sm_keypad_lines = 4;
+    const byte sm_keypad_columns = 4 ; 
+    char sm_keys[4][4] = {{'1','2','3','A'}, {'4','5','6','B'}, {'7','8','9','C'}, {'*','0','#','D'}}; 
+    byte sm_pinLine[4] = {39, 41, 43, 45}; 
+    byte sm_pinColumn[4] = {47, 49, 51 ,53} ;
+    Keypad      *mp_keyBoard;
+    int  m_kindex;
+    int  m_kbuf[2];
+        
   private:
     void              analyzeCommand(); 
+
 };
 
 #endif

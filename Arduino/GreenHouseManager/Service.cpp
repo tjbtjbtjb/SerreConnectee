@@ -20,7 +20,6 @@ struct NameObject {
   char string[12];
 };
 
-
 // --- init of members -------------------------------------------
 void (*Service::softReset)(void)        = 0;  // function pointer to NULL address
 Service* Service::sm_instance           = 0;  // instance init on demand
@@ -49,10 +48,6 @@ Service::Service(int wd_pin) {
   if ( strlen(n.string) > 0) n.string[strlen(n.string)-1]='\0';
   m_stringInitLCD = String((n.h1 == 75 && n.h2 == 13)?n.string:"GreenHouse") + String(" v") + String(sm_softVersion); 
   //Service::m_stringInitLCD = "Arduino0 v" xstr(SOFTWARE_VERSION) ; //" \\(^-^)/  Serre USPC" ; // see e.g. http://1lineart.kulaone.com/#/
-
-  //LCD init 
-  initLCD();
-  delay(200);
   
   // About WD
   wdt_enable(WDTO_8S);  // 4S ? 
@@ -61,6 +56,14 @@ Service::Service(int wd_pin) {
   m_WdLedValue = LOW;
   digitalWrite(m_pinWdLed,m_WdLedValue);
 
+  //LCD init 
+  initLCD();
+  delay(200);
+
+  //Keypad init
+  mp_keyBoard = new Keypad(makeKeymap(sm_keys),sm_pinLine,sm_pinColumn,sm_keypad_lines,sm_keypad_columns);
+  m_kindex = 0;
+ 
   // About sensors
   m_sensorCnt = 0;
   m_sensorArray = new Sensor* [sm_maxSensorCnt];
@@ -96,12 +99,62 @@ Service* Service::getInstance(int wd_pin)  {
 void Service::doLoop() {
   static int i=0,j=0;
   int k,x;
+  char key;
+
   if (m_stringComplete) {
     analyzeCommand();
     m_inputString = "";
     m_stringComplete = false;
   }
 
+  //keyPad read --------------------------
+  key = mp_keyBoard->getKey();
+  if (key != NO_KEY){
+    if(key=='*') { //force rewrite data
+      i=0; 
+    }
+    if(key=='#') { //force init LCD
+      j=0;
+    }
+    if(key=='A') { // display on LCD alarms
+      m_LCD.CharGotoXY(0,13);
+      m_LCD.print("  Alarm status ");m_LCD.print(allAlarmsStatus());
+      for (k=0; k<getAlarmCnt(); k++) {
+        m_LCD.print(getAlarm(k)->getID());m_LCD.print("[");m_LCD.print(k);m_LCD.print("]");m_LCD.print(" -> ");m_LCD.println(getAlarm(k)->getLastValue());
+      }
+    }
+    if(key=='B') { // display on LCD sensors; and clear keypad buffer
+      m_LCD.CharGotoXY(0,13); 
+      for(k=m_alarmCnt;k<m_sensorCnt;k++) { // the first m_alarmCnt are pseudo sensors…
+          m_LCD.print(getSensor(k)->getID());m_LCD.print("[");m_LCD.print(k-m_alarmCnt);m_LCD.print("] ");
+          if (k%2) m_LCD.print(HFILL_LINE); // impression 2 par ligne
+      }
+    }
+    if( m_kindex>0 && (key=='C' || key=='D') ) { // either display the sensor (D) or clear it (C)
+      int id;
+      if (m_kindex==1) id = m_kbuf[0];
+      if (m_kindex==2) id = m_kbuf[0]*10+m_kbuf[1];
+      if (id<m_sensorCnt-m_alarmCnt) { //ignore the command if not
+        if (key=='C') { //clear
+          getSensor(id+m_alarmCnt)->setDisplay(0);
+         }
+        else { //then display
+          getSensor(id+m_alarmCnt)->setDisplay(1);
+        }
+        i=0; // force rewrite data
+      }
+      m_kindex=0;
+    }
+    if(key>='0' && key<='9') {// do something clever too (!)
+      if(m_kindex >= 2) m_kindex=0;
+      m_kbuf[m_kindex++]=(int)(key-'0');
+    }
+    else m_kindex=0;
+  }     
+
+  // clean LCD
+  if ( !j) initLCD();
+   
   // sensor value update and screen display
   if ( !i ) {
     m_LCD.CharGotoXY(0,13);      //Set the start coordinate.
@@ -119,11 +172,6 @@ void Service::doLoop() {
     for (k=x;k<5;k++) m_LCD.print(HFILL_LINE); // to blank screen after last displayed sensor info
     
     if ( mp_mainAlarm ) mp_mainAlarm->setValue( (allAlarmsStatus())?1:0 );
-    
-    //Serial.println(allAlarmsStatus());
-    //for (k=0; k<getAlarmCnt(); k++) {
-    //  Serial.print("Alarm #");Serial.print(k);Serial.print(" -> ");Serial.println(getAlarm(k)->getLastValue());
-    //}
          
     // if in manual mode, force the state of the actuator to the sensor value. Assume sensor name = actuator name
     if ( ! getSensor("AUTO")->getLastValue() ) {
@@ -139,11 +187,8 @@ void Service::doLoop() {
 
   if ( i++ > sm_loopsBtwDisplayUpdates ) i=0; // roughly 5 seconds if delay(200) in wd stuff just below
 
-  if ( j++ > sm_loopsBtwLCDClean) {
-    initLCD();
-    j=0;
-  }
-  
+  if ( j++ > sm_loopsBtwLCDClean) j=0;
+
   //wd stuff
   delay(sm_delayDeepLoop);
   m_WdLedValue = ! m_WdLedValue;
