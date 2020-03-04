@@ -18,14 +18,14 @@ def mylock(path):
                 raise Exception('Cannot open lockfile %r' % path)
 
         try:
-                for x in range(50):
+                for x in range(100):
                         try:
                                 fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
                                 break
                         except IOError as err:
                                 if err.errno != errno.EAGAIN:
                                         raise
-#                        print("wait a bit...")
+                        #print("wait a bit...")
                         time.sleep(0.1)
                 else:
                         raise Exception('Timeout trying to get lock on %r' % path)
@@ -35,6 +35,7 @@ def mylock(path):
 
 lockfilename='/tmp/arduino_' + str(os.getuid()) + '_' + os.path.basename(tty) + '.lock'
 # previously /var/lock ...
+
 for l in mylock(lockfilename):
  arduino = serial.Serial()
  arduino.port     = tty
@@ -42,13 +43,13 @@ for l in mylock(lockfilename):
  arduino.bytesize = serial.EIGHTBITS
  arduino.parity   = serial.PARITY_NONE
  arduino.stopbits = serial.STOPBITS_ONE
- arduino.timeout  = 3
+ arduino.timeout  = 4.5
  arduino.xonxoff  = 0
  arduino.rtscts   = 0
  arduino.dtr      = 0
  arduino.open()
  
- time.sleep(1)
+ time.sleep(0.1)
  
  command=""
  i=0
@@ -61,7 +62,7 @@ for l in mylock(lockfilename):
  #print(command)
  arduino.reset_input_buffer()
  arduino.write(command)
- #arduino.flush()
+ arduino.flush()
  
  for l in arduino:
  	ll=l.splitlines()[0]

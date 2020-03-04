@@ -11,7 +11,7 @@
  * 
  */
 
-#define SOFTWARE_VERSION 190321
+#define SOFTWARE_VERSION 190626 
 
 #include "Service.h"
 
@@ -29,16 +29,21 @@
 #include "CO2PulseSensor.h"
 #include "ThermoCoupleSensor.h"
 #include "WaterFlowSensor.h"
+#include "CapacitiveSoilSensor.h"
 
 //#include "DummyActuator.h"
 #include "DigitalActuator.h"
 //#include "MotorActuator.h"
 //#include "Buzzer.h"
 
+#include "ThresholdAlarm.h"
+
 // --- Static constant definitions
 
+const unsigned long Service::sm_softVersion       = SOFTWARE_VERSION;
 const int Service::sm_maxSensorCnt      = 32;
 const int Service::sm_maxActuatorCnt    = 16;
+const int Service::sm_maxAlarmCnt       = 8;
 const unsigned long Sensor::sm_maxTime = 6000 ; // in milliseconds
 const unsigned long Service::sm_delayDeepLoop = 200; 
 const int Service::sm_loopsBtwDisplayUpdates = 20; 
@@ -70,7 +75,8 @@ TemperatureSensor    lIntTemperatureSensor("INTTEMP",A2);
 TemperatureSensor    lOutTemperatureSensor("OUTTEMP",A15); 
 AirHumiditySensor    lIntAirHumiditySensor("INTAIRHR",&lIntTemperatureSensor);
 AirHumiditySensor    lOutAirHumiditySensor("OUTAIRHR",&lOutTemperatureSensor);
-VoltageSensor        lGroundHumiditySensor("GNDHR",A1,100./5.,"%"); // try to give in %
+//VoltageSensor        lGroundHumiditySensor("GNDHR",A1,100./5.,"%"); // try to give in %
+CapacitiveSoilSensor lGroundHumiditySensor("GNDHR",A1,575,254); 
 DigitalSensor        lStopStepperSensor("STOPSTEP",9);
 VoltageSensor        lThermalFlux("FLUX",A0,1./400./12.1e-6,"W/m2");   // in W / m2 ? 
 ThermoCoupleSensor   lThermoCouple("THERMO",10);
@@ -100,19 +106,35 @@ DigitalSensor        lLedHeat("HEAT",25,1);
 
 //MotorActuator        lMotor("MOTOR",0x0f);
 
+ThresholdAlarm       lAlarmMaxGndTmp("MAXTMP",&lThermoCouple,31,ThresholdAlarm::isMax,&lHeat,0);  // Above 31 degrees, set heat to 0 periodically
+ThresholdAlarm       lAlarmMinGndTmp("MINTMP",&lThermoCouple,17,ThresholdAlarm::isMin,&lHeat,1);  // Below 17 degrees, set heat to 1 periodically
+//ThresholdAlarm       lAlarmMaxGndHr("MAXHR",  &lGroundHumiditySensor, 95, ThresholdAlarm::isMax,&lFan,1); // Above 95%, set fan to 1 periodically
+//ThresholdAlarm       lAlarmMinGndHr("MINHR",  &lGroundHumiditySensor, 0.5, ThresholdAlarm::isMin); // Below 0.5%, do nothing.
+//ThresholdAlarm       lAlarmMAxCo2("MAXCO2", &lCO2Sensor, 500, ThresholdAlarm::isMax,&lFan,1); // 
 #endif
 
 void setup() {
-  pSvc = Service::getInstance(22); // 22, the pin for the WD LED. If no arg, flashes the internal led.
-
+  
+  pSvc = Service::getInstance();//22); // 22, the pin for the WD LED. If no arg, flashes the internal led.
+  
 #if MY_ARDUINO == A_TEST
   pSvc->addSensor(&lLiveTimeInfo);
   pSvc->addSensor(&lDummySensor);
   pSvc->addSensor(&lBit23);
   
 #elif MY_ARDUINO == A_GREEN
-  pSvc->addSensor(&lLiveTimeInfo);
+
+  //Adding alarms
+  pSvc->setMainAlarm(&lAlarm);
+  
+  pSvc->addAlarm(&lAlarmMaxGndTmp);
+  pSvc->addAlarm(&lAlarmMinGndTmp);
+  //pSvc->addAlarm(&lAlarmMaxGndHr);
+  //pSvc->addAlarm(&lAlarmMinGndHr);
+
+  //Adding sensors / actuators
   pSvc->addSensor(&lVersionSensor); 
+  pSvc->addSensor(&lLiveTimeInfo);
   pSvc->addSensor(&lLightSensor);
   pSvc->addSensor(&lIntTemperatureSensor);
   pSvc->addSensor(&lOutTemperatureSensor);

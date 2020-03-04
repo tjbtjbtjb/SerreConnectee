@@ -18,8 +18,15 @@
 
 #include "Sensor.h"
 #include "Actuator.h"
+#include "DigitalActuator.h"
+#include "Alarm.h"
+
 #include <I2C_LCD.h>
 #define HFILL_LINE "                                \n"
+
+#include <Keypad.h> 
+
+// ---------------
 
 class Service {                             // nota : this is a singleton class
   private:
@@ -44,6 +51,14 @@ class Service {                             // nota : this is a singleton class
     Actuator*         getActuator(int) const; 
     Actuator*         getActuator(String)const; //retrieve it by string name
 
+    void              addAlarm(Alarm *) ; 
+    int               getAlarmCnt() const ;
+    Alarm*            getAlarm(int) const; 
+    Alarm*            getAlarm(String)const; //retrieve it by string name
+    unsigned long     allAlarmsStatus() const;
+
+    void              setMainAlarm(DigitalActuator *a) { mp_mainAlarm = a; };
+
     void              initLCD();
     
   private:
@@ -62,17 +77,36 @@ class Service {                             // nota : this is a singleton class
     int               m_actuatorCnt;          // nb of sensors  
     const static int  sm_maxActuatorCnt;      // max nb of sensors
 
+    Alarm**           m_alarmArray;         // array of pointer of alarms
+    int               m_alarmCnt;           // nb of alarms
+    const static int  sm_maxAlarmCnt;       // max nb of alarms
+    DigitalActuator*  mp_mainAlarm; 
+
     int               m_pinWdLed;
     int               m_WdLedValue;
+
+    static const unsigned long sm_softVersion;
 
     static const unsigned long     sm_delayDeepLoop; // delay in milliseconds in the main deep loop (related to wd reset)
     static const int  sm_loopsBtwDisplayUpdates; // nb of loop between update of sensors on lcd display
     static const int  sm_loopsBtwLCDClean;
 
     I2C_LCD           m_LCD;
-   
+
+    String            m_stringInitLCD ;
+
+    const byte sm_keypad_lines = 4;
+    const byte sm_keypad_columns = 4 ; 
+    char sm_keys[4][4] = {{'1','2','3','A'}, {'4','5','6','B'}, {'7','8','9','C'}, {'*','0','#','D'}}; 
+    byte sm_pinLine[4] = {39, 41, 43, 45}; 
+    byte sm_pinColumn[4] = {47, 49, 51 ,53} ;
+    Keypad      *mp_keyBoard;
+    int  m_kindex;
+    int  m_kbuf[2];
+        
   private:
     void              analyzeCommand(); 
+
 };
 
 #endif

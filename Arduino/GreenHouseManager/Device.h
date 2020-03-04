@@ -2,7 +2,7 @@
  * @file      Device.h
  * @Author    Tristan Beau ( tristan.beau@univ-paris-diderot.fr )
  * @date      November, 2017
- * @brief     Header file for the Device master class, used by Sensor and Actuator
+ * @brief     Header file for the Device master class, used by Sensor and Actuator. Manage basically ID
  * 
  * Detailed description
  * 

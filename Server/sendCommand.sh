@@ -9,4 +9,6 @@ ARGS=`echo $@ | sed 's/'$ARDUINO_TARGET' //'`
 
 TTY=`$LISTMEGA | grep $ARDUINO_TARGET | awk -F: '{print $1}'`
 
+! test -n "$TTY" && echo "Arduino board $ARDUINO_TARGET not found on USB bus." >&2 && exit 11
+
 $TALKARDUINO $TTY $ARGS

@@ -3,7 +3,7 @@
  * @file         Service.cpp
  * @Author       Tristan Beau ( tristan.beau@univ-paris-diderot.fr )
  * @date         November, 2017
- * @LastRevDate  March, 2019
+ * @LastRevDate  May, 2019
  * @brief        Class implementation for Green House services
  * 
  * Detailed description
@@ -11,8 +11,14 @@
  * Nota : here we define the maximum managed sensors.
  * 
  */
-
+ 
 #include "Service.h"
+
+#include <EEPROM.h>
+struct NameObject {
+  byte h1,h2;
+  char string[12];
+};
 
 // --- init of members -------------------------------------------
 void (*Service::softReset)(void)        = 0;  // function pointer to NULL address
@@ -35,23 +41,37 @@ Service::Service(int wd_pin) {
   m_lastStatusString = "ACK INIT OK";
   Serial.println(m_lastStatusString);
   delay(5);
-  
-  //LCD init 
-  initLCD();
-  delay(200);
+
+  // retreive in EPROM the board name...
+  NameObject n;
+  EEPROM.get(128,n);
+  if ( strlen(n.string) > 0) n.string[strlen(n.string)-1]='\0';
+  m_stringInitLCD = String((n.h1 == 75 && n.h2 == 13)?n.string:"GreenHouse") + String(" v") + String(sm_softVersion); 
+  //Service::m_stringInitLCD = "Arduino0 v" xstr(SOFTWARE_VERSION) ; //" \\(^-^)/  Serre USPC" ; // see e.g. http://1lineart.kulaone.com/#/
   
   // About WD
-  wdt_enable(WDTO_4S);
+  wdt_enable(WDTO_8S);  // 4S ? 
   m_pinWdLed = wd_pin;
   pinMode(m_pinWdLed,OUTPUT);
   m_WdLedValue = LOW;
   digitalWrite(m_pinWdLed,m_WdLedValue);
 
+  //LCD init 
+  initLCD();
+  delay(200);
+
+  //Keypad init
+  mp_keyBoard = new Keypad(makeKeymap(sm_keys),sm_pinLine,sm_pinColumn,sm_keypad_lines,sm_keypad_columns);
+  m_kindex = 0;
+ 
   // About sensors
   m_sensorCnt = 0;
   m_sensorArray = new Sensor* [sm_maxSensorCnt];
   m_actuatorCnt = 0;
   m_actuatorArray = new Actuator* [sm_maxActuatorCnt];
+  m_alarmCnt = 0;
+  m_alarmArray = new Alarm* [sm_maxAlarmCnt];
+  mp_mainAlarm = 0;
 }
 
 void Service::initLCD() {
@@ -62,12 +82,13 @@ void Service::initLCD() {
   m_LCD.CharGotoXY(0, 0);      //Set the start coordinate.
   m_LCD.FontModeConf(Font_6x12, FM_MNL_AAA, WHITE_BAC);
   //m_LCD.print("  ==> Serre USPC <==");m_LCD.print(HFILL_LINE);
-  m_LCD.print(" \\(^-^)/  Serre USPC" HFILL_LINE); // see e.g. http://1lineart.kulaone.com/#/
+  //Serial.println(m_stringInitLCD);
+  m_LCD.print(m_stringInitLCD + HFILL_LINE);
   m_LCD.FontModeConf(Font_6x8, FM_MNL_AAA, BLACK_BAC); // manual newline  
 }
 
 // --- getInstance() -------------------------------------------------------
-Service* Service::getInstance(int wd_pin) {
+Service* Service::getInstance(int wd_pin)  {
   if ( ! sm_instance ) {
     sm_instance = new Service(wd_pin); 
   }
@@ -78,12 +99,63 @@ Service* Service::getInstance(int wd_pin) {
 void Service::doLoop() {
   static int i=0,j=0;
   int k,x;
+  char key;
+
   if (m_stringComplete) {
     analyzeCommand();
     m_inputString = "";
     m_stringComplete = false;
   }
 
+  //keyPad read --------------------------
+  key = mp_keyBoard->getKey();
+  if (key != NO_KEY){
+    if(key=='*') { //force rewrite data
+      i=0; 
+    }
+    if(key=='#') { //force init LCD
+      j=0;
+    }
+    if(key=='A') { // display on LCD alarms
+      m_LCD.CharGotoXY(0,13);
+      m_LCD.print("  Alarm status ");m_LCD.print(allAlarmsStatus());m_LCD.print(HFILL_LINE);
+      for (k=0; k<getAlarmCnt(); k++) {
+        m_LCD.print(getAlarm(k)->getID());m_LCD.print("[");m_LCD.print(k);m_LCD.print("]");m_LCD.print(" -> ");m_LCD.print(getAlarm(k)->getLastValue());m_LCD.print(HFILL_LINE);
+      }
+      for (x=k;x<5;x++) m_LCD.print(HFILL_LINE);
+    }
+    if(key=='B') { // display on LCD sensors; and clear keypad buffer
+      m_LCD.CharGotoXY(0,13); 
+      for(k=m_alarmCnt+1,x=0;k<m_sensorCnt && x<12;k++,x++) { // the first m_alarmCnt are pseudo sensors…
+          m_LCD.print(getSensor(k)->getID());m_LCD.print("[");m_LCD.print(k-m_alarmCnt);m_LCD.print("] ");
+          if (x%2) m_LCD.print(HFILL_LINE); // impression 2 par ligne
+      }
+    }
+    if( m_kindex>0 && (key=='C' || key=='D') ) { // either display the sensor (D) or clear it (C)
+      int id;
+      if (m_kindex==1) id = m_kbuf[0];
+      if (m_kindex==2) id = m_kbuf[0]*10+m_kbuf[1];
+      if (id<m_sensorCnt-m_alarmCnt) { //ignore the command if not
+        if (key=='C') { //clear
+          getSensor(id+m_alarmCnt)->setDisplay(0);
+         }
+        else { //then display
+          getSensor(id+m_alarmCnt)->setDisplay(1);
+        }
+        i=0; // force rewrite data
+      }
+      m_kindex=0;
+    }
+    if(key>='0' && key<='9') {// do something clever too (!)
+      if(m_kindex >= 2) m_kindex=0;
+      m_kbuf[m_kindex++]=(int)(key-'0');
+    }
+    else m_kindex=0;
+  }     
+
+  // clean LCD
+  if ( !j) initLCD();
+   
   // sensor value update and screen display
   if ( !i ) {
     m_LCD.CharGotoXY(0,13);      //Set the start coordinate.
@@ -99,7 +171,9 @@ void Service::doLoop() {
       }
     }
     for (k=x;k<5;k++) m_LCD.print(HFILL_LINE); // to blank screen after last displayed sensor info
-
+    
+    if ( mp_mainAlarm ) mp_mainAlarm->setValue( (allAlarmsStatus())?1:0 );
+         
     // if in manual mode, force the state of the actuator to the sensor value. Assume sensor name = actuator name
     if ( ! getSensor("AUTO")->getLastValue() ) {
       for (k=0;k<m_actuatorCnt;k++) {
@@ -114,11 +188,8 @@ void Service::doLoop() {
 
   if ( i++ > sm_loopsBtwDisplayUpdates ) i=0; // roughly 5 seconds if delay(200) in wd stuff just below
 
-  if ( j++ > sm_loopsBtwLCDClean) {
-    initLCD();
-    j=0;
-  }
-  
+  if ( j++ > sm_loopsBtwLCDClean) j=0;
+
   //wd stuff
   delay(sm_delayDeepLoop);
   m_WdLedValue = ! m_WdLedValue;
@@ -235,18 +306,18 @@ void Service::addActuator(Actuator *s) {
     abort();
 }
 
-// --- Service::getSensorCnt ------------------------------------------------
+// --- Service::getActuatorCnt ------------------------------------------------
 int Service::getActuatorCnt() const {
   return m_actuatorCnt;
 }
 
-// --- Service::getSensor(int) ----------------------------------------------
+// --- Service::getActuator(int) ----------------------------------------------
 Actuator* Service::getActuator(int i) const {
   if ( i >= getActuatorCnt() ) return NULL;
   return m_actuatorArray[i];
 }
 
-// --- Service::getSensor(String) -------------------------------------------
+// --- Service::getActuator(String) -------------------------------------------
 Actuator* Service::getActuator(String s) const {
   int i=0;
   while (i<getActuatorCnt()){
@@ -255,6 +326,49 @@ Actuator* Service::getActuator(String s) const {
   }
   return getActuator(i);
 }
+
+// --- Service::addAlarm ---------------------------------------------------
+void Service::addAlarm(Alarm *s) {
+  if (m_alarmCnt < sm_maxAlarmCnt) {
+    m_alarmArray[m_alarmCnt++] = s;
+    addSensor(s);
+  }
+   else 
+    abort();
+}
+
+// --- Service::getAlarmCnt ------------------------------------------------
+int Service::getAlarmCnt() const {
+  return m_alarmCnt;
+}
+
+// --- Service::getAlarm(int) ----------------------------------------------
+Alarm* Service::getAlarm(int i) const {
+  if ( i >= getAlarmCnt() ) return NULL;
+  return m_alarmArray[i];
+}
+
+// --- Service::getAlarm(String) -------------------------------------------
+Alarm* Service::getAlarm(String s) const {
+  int i=0;
+  while (i<getAlarmCnt()){
+    if ( s == m_alarmArray[i]->getID() ) break;
+    i++;
+  }
+  return getAlarm(i);
+}
+
+// --- compute alarm status ------------------------------------------------
+unsigned long Service::allAlarmsStatus() const {
+  int i;
+  unsigned long s = 0;
+  for (i=0;i<getAlarmCnt();i++) 
+    if ( getAlarm(i)->getLastValue() ) 
+      s = s | (0x1<<i);
+  
+  return s;
+}
+
 // --- Service::analyzeCommand() --------------------------------------------
 void Service::analyzeCommand() {
   char *word;
