@@ -10,7 +10,7 @@ import fcntl
 import errno
 
 tty=sys.argv[1]
-
+print(tty)
 def mylock(path):
         try:
                 fd = os.open(path, os.O_WRONLY | os.O_CREAT, 0o0600)
@@ -33,7 +33,8 @@ def mylock(path):
         finally:
                 os.close(fd)
 
-lockfilename='/var/lock/arduino_' + os.path.basename(tty[0]) + '.lock'
+lockfilename='/tmp/arduino_' + str(os.getuid()) + '_' + os.path.basename(tty) + '.lock'
+# previously /var/lock ...
 for l in mylock(lockfilename):
  arduino = serial.Serial()
  arduino.port     = tty
