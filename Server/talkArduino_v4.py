@@ -10,7 +10,7 @@ import fcntl
 import errno
 
 tty=sys.argv[1]
-print(tty)
+#print(tty)
 def mylock(path):
         try:
                 fd = os.open(path, os.O_WRONLY | os.O_CREAT, 0o0600)
