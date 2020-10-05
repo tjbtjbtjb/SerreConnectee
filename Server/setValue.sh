@@ -1,7 +1,7 @@
 #!/bin/bash 
 
 test $# -ne 3 && echo "Not enough arg for setValue script. Need arduino, sensor name and value" >&2 && exit 1
-sendCommand="/home/greenhouse/Git/SerreConnectee/Server/sendCommand.sh"
+sendCommand="/home/pi/Git/SerreConnectee/Server/sendCommand.sh"
 arduino=$1
 sensor=$2
 val=$3

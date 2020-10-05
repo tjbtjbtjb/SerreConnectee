@@ -1,7 +1,7 @@
 #!/bin/bash
 
-LISTMEGA=/home/greenhouse/Git/SerreConnectee/Server/listMega.sh
-TALKARDUINO=/home/greenhouse/Git/SerreConnectee/Server/talkArduino_v4.py
+LISTMEGA=/home/pi/Git/SerreConnectee/Server/listMega.sh
+TALKARDUINO=/home/pi/Git/SerreConnectee/Server/talkArduino_v4.py
 
 #.${COLLECTD_HOSTNAME:-`hostname -f`}"
 INTERVAL="${COLLECTD_INTERVAL:-60}"

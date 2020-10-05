@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-GO="/home/greenhouse/Git/SerreConnectee/Server/sendCommand.sh arduino0"
+GO="/home/pi/Git/SerreConnectee/Server/sendCommand.sh arduino0"
 
 $GO set water 1
 sleep 5

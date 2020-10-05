@@ -3,7 +3,7 @@
 arduino=arduino0
 test $# -eq 1 && arduino=$1
 
-GO="/home/greenhouse/Git/SerreConnectee/Server/sendCommand.sh $arduino "
+GO="/home/pi/Git/SerreConnectee/Server/sendCommand.sh $arduino "
 
 INTHR=`$GO get intairhr | awk '{print $2}'`
 FAN=`$GO get fan | awk '{print $2}'`
