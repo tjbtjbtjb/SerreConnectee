@@ -2,6 +2,7 @@
 856353034333512102A2 arduino1 # arduino avec shield pour tests
 55737313631351C0B070 arduino2 # arduino dans Serre 2
 55635303738351C02220 arduino3 # arduino nu pour tests, type arduino original
-5573731353135151E191 arduino4 # arduino sur Serre 3
+5573731353135151E191 arduino4 # arduino perdu ?
 8563530343335121F1A2 arduino5 # arduino sur Serre 1
 85734323030351517122 arduino6 # spare arduino in proto room
+55635303738351017281 arduino7 # arduino sur Serre 3
