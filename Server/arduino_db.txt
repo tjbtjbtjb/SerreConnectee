@@ -6,3 +6,4 @@
 8563530343335121F1A2 arduino5 # arduino sur Serre 3
 85734323030351517122 arduino6 # spare arduino in proto room
 55635303738351017281 arduino7 # arduino sur Serre 1
+55737313631351C072E0 arduino8 # arduino nouvelle version sur Serre 3
