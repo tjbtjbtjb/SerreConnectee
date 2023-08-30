@@ -115,7 +115,7 @@ ThresholdAlarm       lAlarmMinGndTmp("MINTMP",&lThermoCouple,17,ThresholdAlarm::
 
 void setup() {
   
-  pSvc = Service::getInstance();//22); // 22, the pin for the WD LED. If no arg, flashes the internal led.
+  pSvc = Service::getInstance(24); // 24, the pin for the WD LED. If no arg, flashes the internal led.
   
 #if MY_ARDUINO == A_TEST
   pSvc->addSensor(&lLiveTimeInfo);
