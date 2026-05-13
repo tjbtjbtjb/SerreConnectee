@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ARDUINO_SCRIPT=./talkArduino_v3.py
+ARDUINO_SCRIPT=./talkArduino_v4.py
 
 x=1
 while [ $x -gt 0 ] 
