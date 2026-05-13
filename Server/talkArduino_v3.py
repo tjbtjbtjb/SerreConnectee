@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 
 import serial
 import sys
@@ -63,7 +63,7 @@ for l in mylock(lockfilename):
  command += "\n"
  
  arduino.reset_input_buffer()
- arduino.write(command)
+ arduino.write(command.encode())
  #arduino.flush()
 
  for l in arduino:
