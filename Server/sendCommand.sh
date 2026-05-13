@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOCALPATH=/home/pi/Git/SerreConnectee/Server
+LOCALPATH=$HOME/SerreConnectee/Server
 TALKARDUINO=$LOCALPATH/talkArduino_v4.py
 LISTMEGA=$LOCALPATH/listMega.sh
 
