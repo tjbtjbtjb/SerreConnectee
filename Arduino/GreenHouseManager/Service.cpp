@@ -28,8 +28,8 @@ const int Service::sm_maxStringLength   = 63;
 // --- Creator ------------------------------------------------------------
 Service::Service(int wd_pin) {
   // Comm' init
-  delay(500);
-  Serial.begin(9600); // init serial comm'  
+  delay(2000); // allow LCD and other I2C peripherals to fully boot before Wire init
+  Serial.begin(9600); // init serial comm'
   delay(100);
   Wire.begin();
   delay(500);
