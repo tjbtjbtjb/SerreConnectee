@@ -46,9 +46,13 @@ for l in mylock(lockfilename):
      timeout=4.5,
      xonxoff=False,
      rtscts=False,
-     dsrdtr=False,   # prevents DTR toggle that resets the Arduino on connect
+     dsrdtr=False,
  )
- 
+
+ attrs = termios.tcgetattr(arduino.fd)
+ attrs[2] &= ~termios.HUPCL
+ termios.tcsetattr(arduino.fd, termios.TCSANOW, attrs)
+
  time.sleep(0.1)
  
  command=""

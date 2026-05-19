@@ -4,7 +4,7 @@
 import serial
 import sys
 import threading
-import time
+import termios
 
 tty = sys.argv[1] if len(sys.argv) > 1 else '/dev/ttyACM0'
 
@@ -17,8 +17,15 @@ arduino = serial.Serial(
     timeout=0.1,
     xonxoff=False,
     rtscts=False,
-    dsrdtr=False,   # prevents DTR toggle that resets the Arduino on connect
+    dsrdtr=False,
 )
+
+# Clear HUPCL so DTR stays high when the port is closed.
+# This prevents the DTR 1->0->1 transition that resets the Arduino on the next open.
+# Note: the very first open after a power cycle or long disconnect will still reset once.
+attrs = termios.tcgetattr(arduino.fd)
+attrs[2] &= ~termios.HUPCL
+termios.tcsetattr(arduino.fd, termios.TCSANOW, attrs)
 
 print(f"Connected to {tty} at 9600 baud. Type commands, Ctrl-C to quit.\n")
 
