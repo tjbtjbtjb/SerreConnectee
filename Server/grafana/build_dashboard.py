@@ -170,18 +170,19 @@ panels.append({
     "gridPos": {"h": 5, "w": 24, "x": 0, "y": 7},
     "targets": [q_series("switches_value", typ, t, ref=chr(65 + i), agg="max")
                 for i, (t, typ, _, _) in enumerate(tl_series)],
+    # couleurs par seuils (arrêt < 0,5 <= marche) : ne dépend pas de la correspondance exacte des valeurs
     "fieldConfig": {"defaults": {
         "mappings": [{"type": "value", "options": {
-            "0": {"text": "Arrêt", "color": "#33363d", "index": 0},
-            "1": {"text": "Marche", "color": "green", "index": 1}}}],
+            "0": {"text": "Arrêt", "index": 0},
+            "1": {"text": "Marche", "index": 1}}}],
         "color": {"mode": "thresholds"},
-        "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": None}]},
+        "thresholds": {"mode": "absolute", "steps": [{"color": "#33363d", "value": None},
+                                                     {"color": "green", "value": 0.5}]},
         "custom": {"fillOpacity": 85, "lineWidth": 0, "spanNulls": 300000}},
-        "overrides": [{"matcher": {"id": "byName", "options": t},
-                       "properties": [{"id": "mappings", "value": [{"type": "value", "options": {
-                           "0": {"text": "Arrêt", "color": "#33363d", "index": 0},
-                           "1": {"text": "Marche", "color": c, "index": 1}}}]}]}
-                      for t, _, c, _ in tl_series]},
+        "overrides": [{"matcher": {"id": "byFrameRefID", "options": chr(65 + i)},
+                       "properties": [{"id": "thresholds", "value": {"mode": "absolute", "steps": [
+                           {"color": "#33363d", "value": None}, {"color": c, "value": 0.5}]}}]}
+                      for i, (_, _, c, _) in enumerate(tl_series)]},
     "options": {"mergeValues": True, "showValue": "never", "alignValue": "left", "rowHeight": 0.85,
                 "legend": {"showLegend": False}, "tooltip": {"mode": "single"}}})
 
