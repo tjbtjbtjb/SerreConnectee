@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Serre connectée pédagogique</title>
+<style>
+  @page { size: A4 landscape; margin: 0; }
+  :root {
+    --upc: #8a1438;
+    --ink: #1d1d1f;
+    --muted: #55565a;
+    --card: rgba(255, 255, 255, 0.93);
+    --warn-bg: #fff4e0;
+    --warn: #9a5b00;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 297mm; height: 210mm; }
+  body {
+    font-family: "Lato", "DejaVu Sans", sans-serif;
+    color: var(--ink);
+    background: #fff url("fond.jpg") center / cover no-repeat;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    position: relative; overflow: hidden;
+  }
+  .page { position: absolute; inset: 10mm 13mm; display: grid;
+          grid-template-rows: auto minmax(0, 1fr) auto; gap: 5mm; }
+
+  header { display: flex; align-items: center; justify-content: space-between;
+           background: var(--card); border-radius: 5mm; padding: 5mm 9mm;
+           border-left: 3mm solid var(--upc); box-shadow: 0 0.8mm 3mm rgba(60, 20, 35, 0.12); }
+  h1 { font-weight: 900; font-size: 32pt; line-height: 1.05; color: var(--upc); letter-spacing: -0.3pt; }
+  .tagline { font-size: 14pt; color: var(--muted); margin-top: 2mm; }
+  header img { height: 20mm; }
+
+  .cols { display: grid; grid-template-columns: 1.3fr 1fr; gap: 6mm; min-height: 0; }
+  .card { background: var(--card); border-radius: 5mm; padding: 5.5mm 7mm; display: flex; flex-direction: column;
+          border: 0.3mm solid #eadde2; box-shadow: 0 0.8mm 3mm rgba(60, 20, 35, 0.12); }
+  h2 { font-weight: 900; font-size: 16pt; color: var(--upc); margin-bottom: 3mm; }
+  p, li { font-size: 12.5pt; line-height: 1.38; }
+  ul { list-style: none; }
+  li { padding-left: 5mm; position: relative; margin-bottom: 1.2mm; }
+  li::before { content: ""; position: absolute; left: 0; top: 2.4mm; width: 2mm; height: 2mm;
+               border-radius: 50%; background: var(--upc); }
+
+  .qr-row { display: flex; gap: 7mm; align-items: center; }
+  .qr { flex: none; width: 60mm; height: 60mm; padding: 2.5mm; background: #fff; border-radius: 2mm;
+        border: 0.4mm solid #ddd; }
+  .qr img { width: 100%; height: 100%; display: block; }
+  .qr.small { width: 36mm; height: 36mm; }
+  .url { font-weight: 900; font-size: 16pt; color: var(--ink); margin: 0 0 3.5mm; white-space: nowrap; font-size: 18pt; }
+  .url.small { font-size: 12.5pt; font-weight: 700; line-height: 1.25; white-space: normal; margin-bottom: 2mm; }
+
+  .light { margin-top: auto; background: #fff8d6; border: 0.4mm solid #ecd57a; border-radius: 3mm;
+           padding: 3.5mm 5mm; display: flex; gap: 4mm; align-items: flex-start; }
+  .light svg { flex: none; width: 10mm; height: 10mm; }
+  .light h3 { font-size: 13pt; font-weight: 900; margin-bottom: 1.2mm; color: #6b5300; }
+  .light p { font-size: 11.5pt; line-height: 1.38; }
+
+  .right { display: grid; grid-template-rows: auto 1fr; gap: 5mm; min-height: 0; }
+
+  .warn { background: var(--warn-bg); border: 0.5mm solid #f0c27a; border-radius: 5mm;
+          padding: 3mm 8mm; display: flex; gap: 5mm; align-items: center; }
+  .warn .icon { flex: none; width: 11mm; height: 11mm; border-radius: 50%; background: var(--warn);
+                color: #fff; font-weight: 900; font-size: 17pt; display: grid; place-items: center; }
+  .warn p { font-size: 12pt; color: #4a3200; }
+  .warn strong { color: var(--warn); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div>
+      <h1>Serre connectée pédagogique</h1>
+      <div class="tagline">Capteurs, actionneurs et suivi en direct d'une serre instrumentée</div>
+    </div>
+    <img src="logo-upc.svg" alt="Université Paris Cité">
+  </header>
+
+  <div class="cols">
+    <section class="card">
+      <h2>Suivez la serre en direct</h2>
+      <div class="qr-row">
+        <div class="qr"><img src="qr-suivi.svg" alt="QR code vers le suivi en direct"></div>
+        <div>
+          <div class="url">tinyurl.com/upcite-serre</div>
+          <ul>
+            <li>Température de l'air et du sol</li>
+            <li>Humidité de l'air et du sol</li>
+            <li>Luminosité, CO₂, flux thermique au sol</li>
+            <li>État du chauffage, de la ventilation, de l'éclairage et de l'alarme</li>
+          </ul>
+        </div>
+      </div>
+      <div class="light">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#b08900" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>
+        <div>
+        <h3>Gestion actuelle de l'éclairage</h3>
+        <p>De 9&nbsp;h&nbsp;15 à 17&nbsp;h&nbsp;15, la luminosité est contrôlée toutes les 5&nbsp;minutes&nbsp;: la lampe s'allume
+           sous 50&nbsp;%. Toutes les 30&nbsp;minutes, elle est éteinte une vingtaine de secondes pour mesurer
+           la lumière naturelle&nbsp;; elle reste éteinte si celle-ci atteint 55&nbsp;%.
+           Extinction à 17&nbsp;h&nbsp;20.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="right">
+      <section class="card">
+        <h2>Le projet, en libre accès</h2>
+        <div class="qr-row">
+          <div class="qr small"><img src="qr-github.svg" alt="QR code vers le dépôt GitHub"></div>
+          <div>
+            <div class="url small">github.com/tjbtjbtjb/<br>SerreConnectee</div>
+            <p>Programmes Arduino, scripts de pilotage et tableau de bord&nbsp;: tout le code est
+               disponible.</p>
+          </div>
+        </div>
+      </section>
+      <section class="card">
+        <h2>Comment ça marche&nbsp;?</h2>
+        <ul>
+          <li>Une carte Arduino lit les capteurs et commande les actionneurs.</li>
+          <li>Un Raspberry Pi relève les mesures chaque minute et les enregistre.</li>
+          <li>Le tableau de bord les affiche en direct, consultable par tous.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <div class="warn">
+    <div class="icon">!</div>
+    <p><strong>Projet en cours de développement&nbsp;:</strong> les fonctionnalités sont encore partielles.
+       L'arrosage, la brumisation et les capteurs extérieurs ne sont pas encore opérationnels.</p>
+  </div>
+
+</div>
+</body>
+</html>
