@@ -84,7 +84,7 @@ then
     setlight 1
     test -z "$DRYRUN" && echo $now > $statefile
   fi
-elif [ $((now - LASTTEST)) -ge $TEST_EVERY ]
+elif [ $((now - LASTTEST)) -ge $((TEST_EVERY - 60)) ]   # marge : les lancements cron dérivent de quelques secondes
 then
   log "test : extinction pendant $SETTLE s (luminosité lampe allumée : $LUX %)"
   setlight 0
