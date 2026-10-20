@@ -115,9 +115,10 @@ Sa configuration (`conf/config.php`) pointe sur `/var/lib/collectd/rrd`, valeur 
 8. Tâches planifiées (optionnel)
 --------------------------------
 
-Aucune crontab n'est active actuellement. `Server/crontab_current.txt` contient les anciennes tâches
-(éclairage, chauffage, ventilation) : corriger les chemins en `/home/beau/SerreConnectee/...` et l'arduino
-visé avant de l'installer avec `crontab Server/crontab_current.txt`.
+`Server/crontab_current.txt` active l'éclairage piloté par la luminosité (`Server/light.sh`, de 8h30 à 17h30).
+Installation : `crontab Server/crontab_current.txt`. Le fichier contient aussi, en commentaire, les anciennes
+tâches (chauffage, ventilation, arrosage) : corriger les chemins en `/home/beau/SerreConnectee/...` et
+l'arduino visé avant de les réactiver.
 
 Vérification finale
 -------------------

@@ -1,5 +1,15 @@
-31 08 * * * /home/greenhouse/Git/SerreConnectee/Server/sendCommand.sh arduino0 set light 1
-31 18 * * * /home/greenhouse/Git/SerreConnectee/Server/sendCommand.sh arduino0 set light 0
+# Crontab de l'utilisateur beau sur greenhouse (installée avec : crontab Server/crontab_current.txt)
+#
+# Éclairage d'appoint de la serre 1 (arduino7) entre 8h30 et 17h30, toutes les 5 minutes :
+# allumage si luminosité < 50 %, test d'extinction toutes les 30 min (voir light.sh), extinction à 17h35.
+30-55/5 8 * * *  /home/beau/SerreConnectee/Server/light.sh arduino7
+*/5 9-16 * * *   /home/beau/SerreConnectee/Server/light.sh arduino7
+0-30/5 17 * * *  /home/beau/SerreConnectee/Server/light.sh arduino7
+35 17 * * *      /home/beau/SerreConnectee/Server/light.sh arduino7 off
+#
+# Anciennes tâches (arduino0, chemins /home/greenhouse), non installées :
+#31 08 * * * /home/greenhouse/Git/SerreConnectee/Server/sendCommand.sh arduino0 set light 1
+#31 18 * * * /home/greenhouse/Git/SerreConnectee/Server/sendCommand.sh arduino0 set light 0
 #42 9,15 * * 1-5 /home/greenhouse/Git/SerreConnectee/Server/watering.sh arduino0
-*/3 * * * * /home/greenhouse/Git/SerreConnectee/Server/heat.sh arduino0
-*/5 * * * * /home/greenhouse/Git/SerreConnectee/Server/fan_co2.sh arduino0
+#*/3 * * * * /home/greenhouse/Git/SerreConnectee/Server/heat.sh arduino0
+#*/5 * * * * /home/greenhouse/Git/SerreConnectee/Server/fan_co2.sh arduino0

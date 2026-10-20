@@ -5,7 +5,9 @@ sendCommand="$HOME/SerreConnectee/Server/sendCommand.sh"
 arduino=$1
 sensor=$2
 
-ans=`$sendCommand $arduino get $sensor || echo err`
+# the DHT library may print "Read fail" (no newline) before the reply: keep from ACK onwards
+ans=`$sendCommand $arduino get $sensor | grep -o "ACK.*" | tail -1`
+test -z "$ans" && ans=err
 
 ack=`echo $ans | awk '{print $1}'`
 test "$ack" != "ACK" && echo "Incorrect response of $arduino for sensor $sensor, got *$ans* which cannot be interpreted." >&2 && exit 2

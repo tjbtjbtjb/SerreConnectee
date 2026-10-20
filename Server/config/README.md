@@ -35,4 +35,4 @@ Points d'attention
   Modules Apache requis : `ssl`, `rewrite`, `proxy`, `proxy_http`.
 * Les fichiers `/etc/collectd/collectd.conf.d/{filters,thresholds}.conf` sont ceux du paquet Debian
   (entièrement commentés) et ne sont pas copiés.
-* Aucune crontab n'est installée sur greenhouse : `../crontab_current.txt` n'est pas actif.
+* La crontab de `beau` est `../crontab_current.txt` (éclairage piloté par `../light.sh`) : `crontab Server/crontab_current.txt`.
